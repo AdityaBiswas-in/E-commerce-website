@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wishlist — THE ARCHIVE</title>
+  <link rel="icon" type="image/png" href="images/Titel.png">
+  <meta name="description" content="View your saved items and curated archive.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-header {
+      padding: calc(var(--header-height) + var(--spacing-xxl)) var(--spacing-md) var(--spacing-xl);
+      text-align: center;
+      background: var(--surface-container-low);
+      border-bottom: 1px solid rgba(205,198,179,0.2);
+    }
+    
+    .account-layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--spacing-xxl) var(--spacing-md);
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: var(--spacing-xl);
+    }
+
+
+    .wishlist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-xxl) 0;
+      width: 100%;
+    }
+
+    .wishlist-remove-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(252,249,248,0.9);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.2s;
+    }
+    .wishlist-remove-btn:hover { background: var(--surface); transform: scale(1.05); }
+
+    @media (max-width: 768px) {
+      .account-layout { grid-template-columns: 1fr; }
+      .account-sidebar { border-right: none; border-bottom: 1px solid rgba(205,198,179,0.2); padding-bottom: var(--spacing-xl); padding-right: 0;}
+    }
+  </style>
+</head>
+<body>
+
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile Navigation">
+  <a href="index.html">Home</a>
+  <a href="collections.html">Collections</a>
+  <a href="about.html">About</a>
+  <a href="account.html">My Account</a>
+</nav>
+
+<!-- Site Navigation -->
+<header class="site-nav" role="banner">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Archive</a>
+    <nav class="nav-links" aria-label="Primary Navigation">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-icon-btn" href="account.html" aria-label="Account" title="My Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="cart.html" aria-label="Shopping cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <header class="page-header reveal">
+    <p class="label-md" style="color:var(--primary);margin-bottom:var(--spacing-sm);">Member Portal</p>
+    <h1 class="headline-md">Personal Archive</h1>
+  </header>
+
+  <div class="account-layout">
+    <aside class="account-sidebar reveal">
+      <nav class="sidebar-nav">
+        <a href="account.html" class="sidebar-nav-item">Dashboard</a>
+        <a href="orders.html" class="sidebar-nav-item">Order History</a>
+        <a href="wishlist.html" class="sidebar-nav-item active">Archive / Wishlist</a>
+        <button onclick="handleSignOut()" class="sidebar-nav-item sign-out">Sign Out</button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <section class="reveal">
+      <div id="wishlist-container" class="wishlist-grid">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+  </div>
+</main>
+
+<script src="main.js"></script>
+<script>
+  const PRODUCTS_DB = {
+    1: { name: 'Structured Wool Overcoat', price: 104000, img: 'images/overcoat.png', color: 'Natural Bone' },
+    2: { name: 'Linen Popover Shirt', price: 31500, img: 'images/shirt.png', color: 'Ivory Mist' },
+    3: { name: 'Bespoke Weekender Bag', price: 174500, img: 'images/bespoke_bag.png', color: 'Obsidian' },
+    4: { name: 'Pleated Studio Trousers', price: 37500, img: 'images/womens_trousers.png', color: 'Charcoal' },
+    5: { name: 'Heritage Tailored Blazer', price: 104000, img: 'images/womens_blazer.png', color: 'Charcoal' },
+    6: { name: 'Essential Silk Draped Blouse', price: 40000, img: 'images/silk_blouse.png', color: 'Champagne Ivory' },
+    7: { name: 'Heritage Calfskin Chelsea', price: 81500, img: 'images/leather_loafers.png', color: 'Obsidian' },
+    8: { name: 'Silk Pocket Square', price: 11000, img: 'images/silk_blouse.png', color: 'Champagne' },
+    9: { name: 'Heritage 18k Gold Links', price: 153500, img: 'images/gold_links.png', color: 'Gold' },
+    10: { name: 'Heritage Cashmere Turtleneck', price: 68500, img: 'images/mens_sweater.png', color: 'Midnight Navy' },
+    11: { name: 'Pure Cashmere Travel Wrap', price: 45500, img: 'images/cashmere_wrap.png', color: 'Bone' },
+    13: { name: 'Organic Linen Two-Piece Set', price: 15500, img: 'images/linen_set.png', color: 'Sage' },
+    14: { name: 'Heritage Wool Trench Coat', price: 142000, img: 'images/mens_trench.png', color: 'Camel Tobacco' },
+    15: { name: 'Silk Champagne Midi Dress', price: 87500, img: 'images/womens_dress.png', color: 'Champagne' },
+    16: { name: 'Cognac Structured Top-Handle Bag', price: 138000, img: 'images/womens_bag.png', color: 'Cognac' },
+    17: { name: 'Sage Organic Cotton Pinafore', price: 22500, img: 'images/childrens_pinafore.png', color: 'Sage Green' },
+    18: { name: 'Heritage Mini Wool Blazer', price: 31000, img: 'images/childrens_blazer.png', color: 'Charcoal Grey' },
+    19: { name: 'Baby Cashmere Cardigan', price: 28000, img: 'images/baby_cardigan.png', color: 'Oat' },
+    20: { name: 'Cognac Monk-Strap Dress Shoes', price: 75500, img: 'images/mens_loafers.png', color: 'Aged Cognac' },
+    21: { name: 'Stone Slim-Fit Chinos', price: 29500, img: 'images/mens_chinos.png', color: 'Stone' },
+    22: { name: 'Midnight Wool Tuxedo', price: 185000, img: 'images/mens_tuxedo.png', color: 'Midnight Blue' },
+    23: { name: 'Heritage Knit Polo', price: 42500, img: 'images/mens_polo.png', color: 'Charcoal' },
+    24: { name: 'Slim Leather Wallet', price: 28500, img: 'images/mens_wallet.png', color: 'Obsidian' },
+    25: { name: 'Cashmere V-Neck Sweater', price: 58500, img: 'images/mens_vneck.png', color: 'Charcoal' },
+    26: { name: 'Studio White Dress Shirt', price: 24500, img: 'images/white_shirt.png', color: 'Pure White' },
+    27: { name: 'Raw Selvedge Denim', price: 32000, img: 'images/raw_denim.png', color: 'Indigo' },
+    28: { name: 'Merino Wool Sailor Sweater', price: 24500, img: 'images/childrens_sweater.png', color: 'Navy' },
+    29: { name: 'Linen Drawstring Shorts', price: 12000, img: 'images/childrens_shorts.png', color: 'Sand' },
+    30: { name: 'Heritage Denim Overalls', price: 18500, img: 'images/childrens_overalls.png', color: 'Indigo' },
+    31: { name: 'Heritage Wool Peacoat', price: 42000, img: 'images/childrens_coat.png', color: 'Navy' }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderWishlist();
+  });
+
+  function renderWishlist() {
+    const list = getWishlist();
+    const container = document.getElementById('wishlist-container');
+    container.innerHTML = '';
+
+    if (list.length === 0) {
+      container.classList.remove('wishlist-grid');
+      container.innerHTML = `
+        <div class="empty-state">
+          <p style="font-family:var(--font-serif);font-size:1.5rem;color:var(--on-surface);margin-bottom:var(--spacing-md)">Your personal archive is empty.</p>
+          <a href="collections.html" class="btn btn-primary">Discover Pieces</a>
+        </div>
+      `;
+      return;
+    }
+    
+    container.classList.add('wishlist-grid');
+
+    list.forEach(id => {
+      // Handle string vs number ID
+      const p = PRODUCTS_DB[id] || PRODUCTS_DB[parseInt(id)];
+      
+      // If product not found in static DB, show a simplified card with what we know
+      const name = p ? p.name : `Curation ARC-${id}`;
+      const color = p ? p.color : 'The Archive';
+      const price = p ? p.price : 0;
+      const img = p ? p.img : 'images/media_.png';
+
+      const imgHtml = img ? `<img src="${img}" alt="${name}">` : 
+        `<div class="product-img-placeholder" style="background:linear-gradient(135deg,#3a3a3a,#1a1a1a);"><span style="color:rgba(255,255,255,0.5);font-family:var(--font-serif)">${name.split(' ')[0]}</span></div>`;
+
+      container.innerHTML += `
+        <div class="product-card" onclick="window.location.href='product.html?id=${id}'" style="cursor:pointer;position:relative;">
+          <button class="wishlist-remove-btn" onclick="event.stopPropagation(); removeWishlistItem(${id})" aria-label="Remove from wishlist">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-img">
+            ${imgHtml}
+            <div class="product-overlay">
+              <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(${id},'${name}',${price},'${color}')">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-info">
+            <p class="product-name">${name}</p>
+            <p class="product-sub">${color}</p>
+            <p class="product-price">${price > 0 ? '₹' + price.toLocaleString('en-IN') : 'Enquire'}</p>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function removeWishlistItem(id) {
+    toggleWishlist(id, null); // Will remove if it exists
+    renderWishlist(); // re-render
+  }
+
+  function addQuick(id, name, price, color) {
+    addToCart({ id, name, price, color, size: '48' }); // default size for quick add
+  }
+
+</script>
+</body>
+</html>

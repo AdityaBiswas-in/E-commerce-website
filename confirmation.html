@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — THE ARCHIVE</title>
+  <link rel="icon" type="image/png" href="images/Titel.png">
+  <meta name="description" content="Your curation is being prepared at our workshop. Thank you for your order at THE ARCHIVE.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .confirmation-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-xl) var(--spacing-xxl);
+    }
+
+    .confirmation-hero {
+      text-align: center;
+      padding: var(--spacing-xxl) 0;
+    }
+
+    .order-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-xl);
+      margin: var(--spacing-xl) 0;
+    }
+
+    .order-detail-block {
+      padding: var(--spacing-lg);
+      background: var(--surface-container-low);
+    }
+
+    .order-detail-block-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      margin-bottom: var(--spacing-sm);
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(205,198,179,0.15);
+    }
+
+    .order-detail-block p {
+      font-size: 0.8rem;
+      color: var(--on-surface);
+      line-height: 1.6;
+    }
+
+    .order-item-row {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md) 0;
+      border-bottom: 1px solid rgba(205,198,179,0.15);
+    }
+
+    .order-item-thumb-lg {
+      width: 80px;
+      height: 80px;
+      background: var(--surface-container-high);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .order-item-thumb-lg img { width: 100%; height: 100%; object-fit: cover; }
+
+    @keyframes checkmark {
+      0% { stroke-dashoffset: 100; opacity: 0; }
+      100% { stroke-dashoffset: 0; opacity: 1; }
+    }
+
+    .checkmark-circle {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: checkmark 1s ease-out 0.4s forwards;
+    }
+
+    .order-progress-section {
+      margin: var(--spacing-xl) 0;
+      padding: var(--spacing-lg);
+      background: var(--surface-container-low);
+    }
+
+    .social-share {
+      display: flex;
+      gap: var(--spacing-sm);
+      justify-content: center;
+      margin-top: var(--spacing-xl);
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 700px) {
+      .order-detail-grid { grid-template-columns: 1fr; }
+      .confirmation-wrap { padding: 0 var(--spacing-md) var(--spacing-xl); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="index.html">Home</a>
+  <a href="collections.html">Collections</a>
+  <a href="about.html">About</a>
+</nav>
+
+<!-- Site Navigation -->
+<header class="site-nav" role="banner">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Archive</a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-icon-btn" href="signin.html" aria-label="Account" title="Sign In">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="cart.html" aria-label="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div style="padding-top:84px;">
+
+  <!-- Breadcrumb -->
+  <div style="max-width:900px;margin:0 auto;padding:var(--spacing-lg) var(--spacing-xl) 0;">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <a href="cart.html">Archive</a>
+      <span>/</span>
+      <span>Confirmation</span>
+    </div>
+  </div>
+
+  <div class="confirmation-wrap">
+
+    <!-- Confirmation Hero -->
+    <div class="confirmation-hero">
+      <!-- Animated check -->
+      <div style="width:80px;height:80px;margin:0 auto var(--spacing-lg);background:rgba(112,92,35,0.08);display:flex;align-items:center;justify-content:center;">
+        <svg width="40" height="40" viewBox="0 0 60 60" fill="none">
+          <circle cx="30" cy="30" r="28" stroke="var(--primary)" stroke-width="1.5" opacity="0.3"/>
+          <polyline class="checkmark-circle" points="18,30 26,38 42,22" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+
+      <p class="label-md" style="color:var(--primary);margin-bottom:var(--spacing-sm);">Order Confirmed</p>
+      <h1 class="display-lg" style="margin-bottom:var(--spacing-md);">Thank you for<br>your <em style="font-style:italic;color:var(--primary)">order.</em></h1>
+      <p class="body-md" style="max-width:500px;margin:0 auto var(--spacing-lg);">Your curation is being prepared at our workshop. We will notify you as soon as it departs from our atelier.</p>
+      <p style="font-family:var(--font-serif);font-size:1.1rem;color:var(--on-surface);">Order #&thinsp;<span id="order-number" style="color:var(--primary)">ARC-2024-7821</span></p>
+    </div>
+
+    <!-- Order Progress -->
+    <div class="order-progress-section" aria-label="Order progress">
+      <p class="label-md" style="margin-bottom:var(--spacing-lg);">Order Progress</p>
+      <div class="progress-track" role="list">
+        <div class="progress-step" role="listitem">
+          <div class="progress-dot done" aria-label="Confirmed — completed"></div>
+          <span class="progress-label">Confirmed</span>
+        </div>
+        <div class="progress-step" role="listitem">
+          <div class="progress-dot active" aria-label="Processing — in progress" aria-current="true"></div>
+          <span class="progress-label">Processing</span>
+        </div>
+        <div class="progress-step" role="listitem">
+          <div class="progress-dot" aria-label="Dispatched — pending"></div>
+          <span class="progress-label">Dispatched</span>
+        </div>
+        <div class="progress-step" role="listitem">
+          <div class="progress-dot" aria-label="In Transit — pending"></div>
+          <span class="progress-label">In Transit</span>
+        </div>
+        <div class="progress-step" role="listitem">
+          <div class="progress-dot" aria-label="Delivered — pending"></div>
+          <span class="progress-label">Delivered</span>
+        </div>
+      </div>
+      <p style="font-size:0.72rem;color:var(--on-surface-variant);margin-top:var(--spacing-md);">Estimated delivery: <strong style="color:var(--on-surface);" id="estimated-delivery">—</strong></p>
+    </div>
+
+    <!-- Confetti / Sprinkles Canvas -->
+    <canvas id="sprinkles-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;"></canvas>
+
+    <!-- Order Details Grid -->
+    <div class="order-detail-grid">
+      <div class="order-detail-block">
+        <p class="order-detail-block-title">Shipping Address</p>
+        <p id="confirm-address">Alexander Thorne<br>72 Rue du Faubourg Saint-Honoré<br>75008 Paris, France</p>
+      </div>
+      <div class="order-detail-block">
+        <p class="order-detail-block-title">Payment Method</p>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <div style="padding:3px 10px;background:var(--surface-container-highest);font-size:0.62rem;font-weight:700;letter-spacing:0.05em;">VISA</div>
+          <p style="font-size:0.8rem;color:var(--on-surface);">Ending in •••• 9012</p>
+        </div>
+        <p id="confirm-name-on-card" style="font-size:0.75rem;color:var(--on-surface-variant);">Billed to Alexander Thorne</p>
+      </div>
+      <div class="order-detail-block">
+        <p class="order-detail-block-title">Shipping Speed</p>
+        <p>International Express (2–3 Days)</p>
+      </div>
+      <div class="order-detail-block">
+        <p class="order-detail-block-title">Contact</p>
+        <p>a.thorne@studio.com<br>+33 (0) 1 42 65 24 24</p>
+        <p style="margin-top:8px;font-size:0.72rem;color:var(--on-surface-variant);">Need assistance with your curation?<br><a href="mailto:support@thearchive.com" style="color:var(--primary);">support@thearchive.com</a></p>
+      </div>
+    </div>
+
+    <!-- CTA Actions -->
+    <div style="display:flex;gap:var(--spacing-md);justify-content:center;flex-wrap:wrap;margin-top:var(--spacing-xl);">
+      <a href="collections.html" class="btn btn-primary">Continue Exploring</a>
+      <button class="btn btn-secondary" onclick="window.print()">Download Receipt</button>
+    </div>
+
+    <!-- Social Share -->
+    <div class="social-share">
+      <p class="label-md" style="width:100%;text-align:center;margin-bottom:var(--spacing-sm);">Share Your Archive</p>
+      <button class="btn btn-secondary" onclick="shareOrder('twitter')" style="padding:10px 20px;font-size:0.65rem;">Share on X</button>
+      <button class="btn btn-secondary" onclick="shareOrder('instagram')" style="padding:10px 20px;font-size:0.65rem;">Save to Instagram</button>
+    </div>
+
+    <!-- What's Next -->
+    <div style="margin-top:var(--spacing-xxl);padding:var(--spacing-xl);background:var(--surface-container-low);">
+      <p class="label-md" style="margin-bottom:var(--spacing-md);color:var(--primary)">What Happens Next</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--spacing-lg);">
+        <div>
+          <p style="font-family:var(--font-serif);font-size:2rem;font-weight:300;color:var(--primary);margin-bottom:8px;">01</p>
+          <p class="headline-sm" style="font-size:0.9rem;margin-bottom:4px;">Atelier Inspection</p>
+          <p class="body-md" style="font-size:0.75rem;">Each piece is inspected by our master craftspeople before packaging.</p>
+        </div>
+        <div>
+          <p style="font-family:var(--font-serif);font-size:2rem;font-weight:300;color:var(--primary);margin-bottom:8px;">02</p>
+          <p class="headline-sm" style="font-size:0.9rem;margin-bottom:4px;">Signature Packaging</p>
+          <p class="body-md" style="font-size:0.75rem;">Wrapped in archival tissue, placed in a bespoke Archive box.</p>
+        </div>
+        <div>
+          <p style="font-family:var(--font-serif);font-size:2rem;font-weight:300;color:var(--primary);margin-bottom:8px;">03</p>
+          <p class="headline-sm" style="font-size:0.9rem;margin-bottom:4px;">Delivery</p>
+          <p class="body-md" style="font-size:0.75rem;">You will receive a tracking notification once your order departs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-brand-name">The Archive</p>
+      <p class="footer-tagline">A curated study of architecture and apparel. We value your silence.</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Collections</p>
+      <nav class="footer-links"><a href="collections.html">All Items</a><a href="collections.html">Outerwear</a></nav>
+    </div>
+    <div>
+      <p class="footer-col-title">Support</p>
+      <nav class="footer-links"><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Contact</a></nav>
+    </div>
+    <div>
+      <p class="footer-col-title">The Atelier</p>
+      <nav class="footer-links"><a href="#">About</a></nav>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copyright">© 2024 The Editorial Archive. All rights reserved.</p>
+    <div class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Load real order details
+    const lastOrderId = sessionStorage.getItem('last_order_id');
+    const sessionEmail = localStorage.getItem('archive_active_session');
+    
+    if (lastOrderId && sessionEmail) {
+      try {
+        const usersDB = JSON.parse(localStorage.getItem('archive_users')) || {};
+        const userOrders = usersDB[sessionEmail]?.orders || [];
+        const order = userOrders.find(o => o.id === lastOrderId);
+        
+        if (order) {
+          // Update Order ID
+          document.getElementById('order-number').textContent = order.id;
+          
+          // Update Delivery Date
+          const delivDate = new Date(order.deliveryDate);
+          const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+          document.getElementById('estimated-delivery').textContent = delivDate.toLocaleDateString('en-GB', opts);
+          
+          // Update Address
+          const addr = order.address;
+          document.getElementById('confirm-address').innerHTML = `
+            ${addr.firstName} ${addr.lastName}<br>
+            ${addr.address1}${addr.address2 ? ', ' + addr.address2 : ''}<br>
+            ${addr.city}, ${addr.zip}, ${addr.country}
+          `;
+          
+          // Update Payment Method
+          if (order.payment) {
+            const payBlock = document.querySelector('.order-detail-block:nth-child(2)');
+            payBlock.innerHTML = `
+              <p class="order-detail-block-title">Payment Method</p>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                <div style="padding:3px 10px;background:var(--surface-container-highest);font-size:0.62rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">${order.payment.type}</div>
+                <p style="font-size:0.8rem;color:var(--on-surface);">${order.payment.summary}</p>
+              </div>
+              <p id="confirm-name-on-card" style="font-size:0.75rem;color:var(--on-surface-variant);">Billed to ${addr.firstName} ${addr.lastName}</p>
+            `;
+          }
+          
+          // Update Contact
+          if (order.contact) {
+            const contactBlock = document.querySelector('.order-detail-block:nth-child(4)');
+            contactBlock.innerHTML = `
+              <p class="order-detail-block-title">Contact</p>
+              <p>${order.contact.email}</p>
+              <p style="margin-top:8px;font-size:0.72rem;color:var(--on-surface-variant);">Need assistance? <br><a href="mailto:support@thearchive.com" style="color:var(--primary);">support@thearchive.com</a></p>
+            `;
+          }
+
+          // Update Shipping Speed
+          if (order.shippingSpeed) {
+            const shipBlock = document.querySelector('.order-detail-block:nth-child(3)');
+            shipBlock.innerHTML = `
+               <p class="order-detail-block-title">Shipping Speed</p>
+               <p>${order.shippingSpeed}</p>
+            `;
+          }
+        }
+      } catch (e) {
+        console.error("Error loading order details", e);
+      }
+    }
+
+    // Initialize Sprinkles
+    initSprinkles();
+  });
+
+  function initSprinkles() {
+    const canvas = document.getElementById('sprinkles-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+
+    const colors = ['#705c23', '#cdc6b3', '#2a2218', '#fcf9f8', '#d4af37'];
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * -height;
+        this.size = Math.random() * 6 + 2;
+        this.velocity = Math.random() * 3 + 2;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.angle = Math.random() * 360;
+        this.spin = Math.random() * 5 - 2.5;
+      }
+
+      update() {
+        this.y += this.velocity;
+        this.angle += this.spin;
+        if (this.y > height) {
+          this.y = -20;
+          this.x = Math.random() * width;
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle * Math.PI / 180);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size/3);
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < 150; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+    
+    // Stop after 8 seconds to save resources
+    setTimeout(() => {
+      particles = [];
+      canvas.style.display = 'none';
+    }, 8000);
+  }
+  function shareOrder(platform) {
+    const text = 'Just curated my archive at THE ARCHIVE ✦ Luxury editorial fashion for the modern atelier.';
+    const url = 'https://thearchive.com';
+    if (platform === 'twitter') {
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+    } else {
+      showToast('Open Instagram and share your unboxing experience!');
+    }
+  }
+</script>
+</body>
+</html>

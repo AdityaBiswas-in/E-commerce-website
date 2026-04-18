@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Detail — THE ARCHIVE</title>
+  <link rel="icon" type="image/png" href="images/Titel.png">
+  <meta name="description" content="Sculpted Merino Overcoat — A masterful study in architectural tailoring. Constructed from double-faced Australian Merino wool.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .product-detail-layout {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 84px var(--spacing-xl) var(--spacing-xxl);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-xxl);
+      align-items: start;
+      min-height: 100vh;
+    }
+
+    .product-gallery {
+      position: sticky;
+      top: 84px;
+    }
+
+    .gallery-main {
+      aspect-ratio: 4/5;
+      background: var(--surface-container);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .gallery-main img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-main:hover img { transform: scale(1.03); }
+
+    .gallery-thumbs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .gallery-thumb {
+      aspect-ratio: 1;
+      background: var(--surface-container-high);
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: var(--transition-fast);
+      border: 1px solid transparent;
+    }
+
+    .gallery-thumb.active { opacity: 1; border-color: var(--primary); }
+    .gallery-thumb:hover { opacity: 0.85; }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    .product-detail-info { padding-top: var(--spacing-lg); }
+
+    .product-detail-name {
+      font-family: var(--font-serif);
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--on-surface);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .product-detail-price {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--on-surface);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .detail-section {
+      padding: var(--spacing-md) 0;
+      border-top: 1px solid rgba(205,198,179,0.15);
+    }
+
+    .detail-section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+    }
+
+    .detail-section-body {
+      margin-top: var(--spacing-sm);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--on-surface-variant);
+    }
+
+    .detail-section-body.hidden { display: none; }
+
+    .material-list { list-style: none; padding: 0; }
+    .material-list li { padding: 6px 0; font-size: 0.8rem; color: var(--on-surface-variant); display: flex; gap: 10px; }
+    .material-list li::before { content: '—'; color: var(--primary); }
+
+    .complete-look { margin-top: var(--spacing-xxl); }
+    .complete-look .headline-sm { margin-bottom: var(--spacing-md); }
+
+    .look-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-sm); }
+
+    .look-item {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+
+    .look-item:hover { transform: translateY(-2px); }
+    .look-item:hover img { opacity: 0.85; }
+
+    .look-item-img {
+      aspect-ratio: 3/4;
+      background: var(--surface-container-high);
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .look-item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .look-item-name { font-family: var(--font-serif); font-size: 0.85rem; color: var(--on-surface); }
+    .look-item-price { font-size: 0.75rem; color: var(--on-surface-variant); }
+
+    /* Zoom modal */
+    #zoom-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      background: rgba(28,27,27,0.95);
+      align-items: center;
+      justify-content: center;
+    }
+
+    #zoom-modal.active { display: flex; }
+    #zoom-modal img { max-width: 90vw; max-height: 90vh; object-fit: contain; }
+
+    @media (max-width: 900px) {
+      .product-detail-layout { grid-template-columns: 1fr; padding: 84px var(--spacing-md) var(--spacing-xl); }
+      .product-gallery { position: static; }
+      .look-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="index.html">Home</a>
+  <a href="collections.html">Collections</a>
+  <a href="about.html">About</a>
+  <a href="signin.html">My Account</a>
+</nav>
+
+<!-- Site Navigation -->
+<header class="site-nav" role="banner">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Archive</a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-icon-btn" href="signin.html" aria-label="Account" title="Sign In">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="cart.html" aria-label="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Zoom Modal -->
+<div id="zoom-modal" role="dialog" aria-label="Zoomed image" onclick="this.classList.remove('active')">
+  <img id="zoom-img" src="" alt="Product zoom">
+  <button style="position:absolute;top:24px;right:24px;color:#fff;font-size:1.5rem;background:none;border:none;cursor:pointer;" onclick="document.getElementById('zoom-modal').classList.remove('active')">✕</button>
+</div>
+
+<!-- Product Detail Layout -->
+<main class="product-detail-layout" id="product-detail-main">
+
+  <!-- Gallery -->
+  <div class="product-gallery" aria-label="Product Gallery">
+    <div class="gallery-main" id="gallery-main" onclick="openZoom()" style="cursor:zoom-in;" title="Click to zoom">
+      <img id="main-img" src="images/overcoat.png" alt="Sculpted Merino Overcoat — Front View">
+    </div>
+  </div>
+
+  <!-- Product Info -->
+  <div class="product-detail-info">
+    <div class="breadcrumb" style="margin-bottom:var(--spacing-md);">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <a href="collections.html">Collections</a>
+      <span>/</span>
+      <span id="breadcrumb-name">Overcoat</span>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:var(--spacing-sm);">
+      <span class="badge badge-gold" id="product-badge">Signature Series</span>
+      <span class="label-md" id="product-category-label">Men — Outerwear</span>
+    </div>
+
+    <h1 class="product-detail-name" id="product-name">Sculpted Merino Overcoat</h1>
+    <p class="product-detail-price" id="product-price">₹1,53,500</p>
+
+    <p class="body-md" id="product-description" style="margin-bottom:var(--spacing-lg);">A masterful study in architectural tailoring. Constructed from double-faced Australian Merino wool, this silhouette features an exaggerated peak lapel and hand-finished seams for a seamless, ethereal drape.</p>
+
+    <!-- Color Selection -->
+    <div style="margin-bottom:var(--spacing-md);">
+      <p class="label-md" style="margin-bottom:10px;">Colour: <span id="selected-color" style="color:var(--on-surface)">Midnight Charcoal</span></p>
+      <div class="color-swatches" id="color-swatches" role="group" aria-label="Select colour">
+        <div class="color-swatch selected" style="background:#2C2C2C;" title="Midnight Charcoal" data-color="Midnight Charcoal" onclick="selectColor(this)" tabindex="0"></div>
+        <div class="color-swatch" style="background:#f5f0e8;" title="Natural Bone" data-color="Natural Bone" onclick="selectColor(this)" tabindex="0"></div>
+        <div class="color-swatch" style="background:#8a7968;" title="Warm Camel" data-color="Warm Camel" onclick="selectColor(this)" tabindex="0"></div>
+        <div class="color-swatch" style="background:#1a3050;" title="Midnight Navy" data-color="Midnight Navy" onclick="selectColor(this)" tabindex="0"></div>
+      </div>
+    </div>
+
+    <!-- Size Selection -->
+    <div style="margin-bottom:var(--spacing-md);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <p class="label-md">Size: <span id="selected-size" style="color:var(--on-surface)">Select Size</span></p>
+        <button class="btn-text btn" style="font-size:0.65rem;" onclick="showToast('Size guide: XS(34), S(36), M(38), L(40), XL(42), XXL(44)')">Size Guide</button>
+      </div>
+      <div class="size-grid" id="size-grid" role="group" aria-label="Select size">
+        <button class="size-btn" onclick="selectSize(this)">XS</button>
+        <button class="size-btn" onclick="selectSize(this)">S</button>
+        <button class="size-btn" onclick="selectSize(this)">M</button>
+        <button class="size-btn" onclick="selectSize(this)">L</button>
+        <button class="size-btn" onclick="selectSize(this)">XL</button>
+        <button class="size-btn" onclick="selectSize(this)">XXL</button>
+      </div>
+    </div>
+
+    <!-- Quantity -->
+    <div style="margin-bottom:var(--spacing-lg);">
+      <p class="label-md" style="margin-bottom:10px;">Quantity</p>
+      <div class="qty-selector" role="group" aria-label="Quantity selector">
+        <button class="qty-btn" id="qty-minus" onclick="changeQty(-1)" aria-label="Decrease quantity">−</button>
+        <span class="qty-value" id="qty-display" aria-live="polite">1</span>
+        <button class="qty-btn" id="qty-plus" onclick="changeQty(1)" aria-label="Increase quantity">+</button>
+      </div>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:var(--spacing-lg);">
+      <button class="btn btn-primary btn-full" id="add-to-cart-btn" onclick="handleAddToCart()">
+        Add to Archive
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </button>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-secondary" style="flex:1;" onclick="toggleWishlist(product.id, this)" id="wishlist-btn">
+          Save to Wishlist
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <a href="cart.html" class="btn btn-secondary" style="flex:1;text-align:center;">View Archive (Cart)</a>
+      </div>
+    </div>
+
+    <!-- Trust signals -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-sm);margin-bottom:var(--spacing-lg);">
+      <div style="display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--on-surface-variant);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Complimentary shipping
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--on-surface-variant);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        30-day returns
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--on-surface-variant);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Authenticated luxury
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--on-surface-variant);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Secure payment
+      </div>
+    </div>
+
+    <!-- Accordion Details -->
+    <div class="detail-section">
+      <div class="detail-section-title" onclick="toggleSection(this)" role="button" tabindex="0">
+        <span>Material &amp; Care</span>
+        <span class="toggle-icon">+</span>
+      </div>
+      <div class="detail-section-body">
+        <ul class="material-list">
+          <li>100% Double-faced Australian Merino Wool</li>
+          <li>Fully lined in silk-blend</li>
+          <li>Hand-finished seams and peak lapel</li>
+          <li>Dry clean only — recommended specialist care</li>
+          <li>Store folded on padded hanger</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title" onclick="toggleSection(this)" role="button" tabindex="0">
+        <span>Craftsmanship &amp; Origin</span>
+        <span class="toggle-icon">+</span>
+      </div>
+      <div class="detail-section-body hidden">
+        <p>Crafted in our heritage atelier in Milan, Italy. Each piece is hand-numbered and limited — ensuring your silhouette remains as unique as the story you write within it.</p>
+        <p style="margin-top:10px;">Crafted for the modern archivist, where legacy meets the avant-garde.</p>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title" onclick="toggleSection(this)" role="button" tabindex="0">
+        <span>Shipping &amp; Returns</span>
+        <span class="toggle-icon">+</span>
+      </div>
+      <div class="detail-section-body hidden">
+        <p>Complimentary standard shipping on all orders. Express shipping (2-3 business days) available at checkout.</p>
+        <p style="margin-top:10px;">Returns accepted within 30 days in original condition, unworn, with all tags attached.</p>
+      </div>
+    </div>
+
+    <!-- Complete the Look -->
+    <div class="complete-look">
+      <p class="label-md" style="margin-bottom:var(--spacing-sm);color:var(--primary)">Complete the Look</p>
+      <h2 class="headline-sm" style="margin-bottom:var(--spacing-md);">Curated Pairings</h2>
+      <div class="look-grid">
+        <div class="look-item" onclick="navigateTo('product.html?id=6')">
+          <div class="look-item-img">
+            <img src="images/silk_dress.png" alt="Silk Column Dress">
+          </div>
+          <p class="look-item-name">Silk Column Dress</p>
+          <p class="look-item-price">₹53,000</p>
+        </div>
+        <div class="look-item" onclick="navigateTo('product.html?id=7')">
+          <div class="look-item-img">
+            <img src="images/leather_boot.png" alt="Tapered Leather Boot">
+          </div>
+          <p class="look-item-name">Tapered Leather Boot</p>
+          <p class="look-item-price">₹81,500</p>
+        </div>
+        <div class="look-item" onclick="navigateTo('product.html?id=9')">
+          <div class="look-item-img">
+            <img src="images/earrings.png" alt="Hammered Orb Earrings">
+          </div>
+          <p class="look-item-name">Hammered Orb Earrings</p>
+          <p class="look-item-price">₹26,500</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Limited edition note -->
+    <div style="margin-top:var(--spacing-xl);padding:var(--spacing-md);background:rgba(112,92,35,0.06);border-left:2px solid var(--primary);">
+      <p class="label-md" style="color:var(--primary);margin-bottom:6px;">A Note from the Atelier</p>
+      <p class="body-md">Each piece is numbered and limited, ensuring your silhouette remains as unique as the story you write within it.</p>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-brand-name">The Archive</p>
+      <p class="footer-tagline">A curated study of architecture and apparel. We value your silence.</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Collections</p>
+      <nav class="footer-links"><a href="collections.html">All Items</a><a href="collections.html">Outerwear</a></nav>
+    </div>
+    <div>
+      <p class="footer-col-title">Support</p>
+      <nav class="footer-links"><a href="#">Shipping</a><a href="#">Returns</a></nav>
+    </div>
+    <div>
+      <p class="footer-col-title">The Atelier</p>
+      <nav class="footer-links"><a href="#">About</a><a href="#">Contact</a></nav>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copyright">© 2024 The Editorial Archive. All rights reserved.</p>
+    <div class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  // Product database
+  const PRODUCTS = {
+    1: { id:1, name:'Structured Wool Overcoat', price:104000, category:'Outerwear', gender:'Women', badge:'Inaugural', desc:'A landmark silhouette constructed from heritage-grade virgin wool. Full canvas construction with hand-stitched lapels and reinforced shoulder structure.', img:'images/overcoat.png' },
+    2: { id:2, name:'Linen Popover Shirt', price:31500, category:'Tops', gender:'Women', badge:'Essentials', desc:'The definitive summer shirt. Woven from stonewashed Italian linen for a graceful drape that softens with every wear.', img:'images/shirt.png' },
+    3: { id:3, name:'Bespoke Weekender Bag', price:174500, category:'Leather Goods', gender:'Unisex', badge:'Signature', desc:'Hand-stitched in full-grain vegetable-tanned leather. An architectural form that serves as both a functional piece and a work of art.', img:'images/bespoke_bag.png' },
+    4: { id:4, name:'Pleated Studio Trousers', price:37500, category:'Trousers', gender:'Women', badge:'Essentials', desc:'Wide-leg pleated trousers in a premium charcoal wool blend. The perfect proportional balance to any structured top.', img:'images/womens_trousers.png' },
+    5: { id:5, name:'Heritage Tailored Blazer', price:104000, category:'Outerwear', gender:'Women', badge:'Heritage', desc:'Full canvas, single-breasted, peak lapel. The blazer that has defined every look since 1924.', img:'images/womens_blazer.png' },
+    6: { id:6, name:'Essential Silk Draped Blouse', price:40000, category:'Tops', gender:'Women', badge:'Essentials', desc:'Pure mulberry silk in a graceful drape. The blouse that whispers luxury.', img:'images/silk_blouse.png' },
+    7: { id:7, name:'Hand-Burnished Leather Loafers', price:51500, category:'Footwear', gender:'Men', badge:'Signature', desc:'Goodyear-welted with a hand-burnished finish in aged cognac calfskin. A lifetime investment.', img:'images/leather_loafers.png' },
+    9: { id:9, name:'Heritage 18k Gold Links', price:153500, category:'Accessories', gender:'Women', badge:'Limited Edition', desc:'Hammered 18k gold link bracelet. Each link individually formed and polished by our master goldsmith in Florence.', img:'images/gold_links.png' },
+    10: { id:10, name:'Heritage Cashmere Turtleneck', price:68500, category:'Knitwear', gender:'Women', badge:'New Arrival', desc:'Woven from Grade-A Mongolian cashmere in our partner mill in the Scottish Highlands. A turtleneck with architectural volume and an unmatched softness.', img:'images/mens_sweater.png' },
+    11: { id:11, name:'Pure Cashmere Travel Wrap', price:45500, category:'Accessories', gender:'Women', badge:'Essentials', desc:'An oversized wrap in two-ply Mongolian cashmere. The most versatile piece in the Archive — blanket, scarf, and shawl combined.', img:'images/cashmere_wrap.png' },
+    13: { id:13, name:'Organic Linen Two-Piece Set', price:15500, category:'Essentials', gender:'Children', badge:'Essentials', desc:'A relaxed coordinate set in GOTS-certified organic linen. Zero synthetic dyes, breathable, and gentle on the most sensitive skin.', img:'images/linen_set.png' },
+    14: { id:14, name:'Heritage Wool Trench Coat', price:142000, category:'Outerwear', gender:'Women', badge:'New Arrival', desc:'A camel-toned heritage trench coat constructed from a double-woven English wool blend. Fully lined, storm flap, and hand-finished horn buttons.', img:'images/mens_trench.png' },
+    15: { id:15, name:'Silk Champagne Midi Dress', price:87500, category:'Dresses', gender:'Women', badge:'New Arrival', desc:'Pure mulberry silk in a champagne drape. A bias-cut midi dress with invisible seaming and hand-rolled hems — a study in effortless refinement.', img:'images/womens_dress.png' },
+    16: { id:16, name:'Cognac Structured Top-Handle Bag', price:138000, category:'Leather Goods', gender:'Women', badge:'Signature', desc:'A structured top-handle bag in vegetable-tanned Italian leather. Gold-plated brass hardware, suede interior, and a hand-stitched gusset built to last decades.', img:'images/womens_bag.png' },
+    17: { id:17, name:'Sage Organic Cotton Pinafore', price:22500, category:'Dresses', gender:'Children', badge:'New Arrival', desc:'A relaxed pinafore in GOTS-certified organic cotton with hand-embroidered hem detailing. Sage green, gentle dye, ages 3–10.', img:'images/childrens_pinafore.png' },
+    18: { id:18, name:'Heritage Mini Wool Blazer', price:31000, category:'Outerwear', gender:'Children', badge:'New Arrival', desc:'A miniature recreation of our Heritage Tailored Blazer in premium charcoal wool. Half canvas, horn buttons, and a fully lined interior. Ages 5–12.', img:'images/childrens_blazer.png' },
+    19: { id:19, name:'Baby Cashmere Cardigan', price:28000, category:'Knitwear', gender:'Children', badge:'Essentials', desc:'A hand-knit cardigan in ultra-fine Mongolian cashmere. The gentlest fibre for the youngest members of the Archive. Ages 1–6.', img:'images/baby_cardigan.png' },
+    20: { id:20, name:'Cognac Monk-Strap Dress Shoes', price:75500, category:'Footwear', gender:'Men', badge:'New Arrival', desc:'Handcrafted Goodyear-welted monk-strap shoes in aged cognac calfskin. Double-buckle closure and a hand-burnished patina that deepens beautifully over years of wear.', img:'images/mens_loafers.png' },
+    21: { id:21, name:'Stone Slim-Fit Chinos', price:29500, category:'Trousers', gender:'Men', badge:'Essentials', desc:'Slim-tapered chinos in a smooth Italian cotton twill. A versatile stone colourway that moves seamlessly between formal and weekend.', img:'images/mens_chinos.png' },
+    22: { id:22, name:'Midnight Wool Tuxedo', price:185000, category:'Formalwear', gender:'Men', badge:'Signature', desc:'Midnight blue wool tuxedo with satin peak lapels. A masterpiece of formal tailoring, featuring a slim-profile silhouette and hand-finished details.', img:'images/mens_tuxedo.png' },
+    23: { id:23, name:'Heritage Knit Polo', price:42500, category:'Knitwear', gender:'Men', badge:'Essentials', desc:'A structured knit polo in a premium charcoal wool-silk blend. Minimalist three-button placket and a clean, refined drape.', img:'images/mens_polo.png' },
+    24: { id:24, name:'Slim Leather Wallet', price:28500, category:'Leather Goods', gender:'Men', badge:'Essentials', desc:'Hand-stitched in obsidian full-grain leather. A minimalist bifold design that maintains a slim profile while offering ample storage for life\'s essentials.', img:'images/mens_wallet.png' },
+    25: { id:25, name:'Cashmere V-Neck Sweater', price:58500, category:'Knitwear', gender:'Men', badge:'New Arrival', desc:'Ultra-soft Mongolian cashmere in a classic V-neck silhouette. Lightweight yet insulating, perfect for layering or solo wear.', img:'images/mens_vneck.png' },
+    26: { id:26, name:'Studio White Dress Shirt', price:24500, category:'Tops', gender:'Men', badge:'Essentials', desc:'Constructed from high-density Egyptian cotton poplin. A crisp, architectural shirt with a concealed placket and structured collar.', img:'images/white_shirt.png' },
+    27: { id:27, name:'Raw Selvedge Denim', price:32000, category:'Trousers', gender:'Men', badge:'New Arrival', desc:'Stiff, unwashed indigo denim from a boutique mill in Okayama. Built to age beautifully and develop a unique character with every wear.', img:'images/raw_denim.png' },
+    28: { id:28, name:'Merino Wool Sailor Sweater', price:24500, category:'Knitwear', gender:'Children', badge:'New Arrival', desc:'A classic sailor sweater knit from extra-fine merino wool. Navy with ivory stripes. Gentle, warm, and timeless.', img:'images/childrens_sweater.png' },
+    29: { id:29, name:'Linen Drawstring Shorts', price:12000, category:'Essentials', gender:'Children', badge:'Essentials', desc:'Lightweight drawstring shorts in breathable sand-toned linen. Designed for maximum comfort and ease of movement during summer play.', img:'images/childrens_shorts.png' },
+    30: { id:30, name:'Heritage Denim Overalls', price:18500, category:'Essentials', gender:'Children', badge:'Signature', desc:'Classic overalls constructed from a soft but durable dark indigo wash denim. Adjustable straps to grow alongside them.', img:'images/childrens_overalls.png' },
+    31: { id:31, name:'Heritage Wool Peacoat', price:42000, category:'Outerwear', gender:'Children', badge:'Collection', desc:'A miniature adaptation of our classic naval peacoat. Woven from a dense navy wool blend to offer superior warmth and structure.', img:'images/childrens_coat.png' }
+  };
+
+  let selectedSize = null;
+  let selectedColor = 'Midnight Charcoal';
+  let qty = 1;
+  let product = null;
+
+  function loadProduct() {
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id')) || 1;
+    product = PRODUCTS[id] || PRODUCTS[1];
+
+    // Apply product data
+    document.title = `${product.name} — THE ARCHIVE`;
+    document.querySelector('meta[name="description"]').content = product.desc;
+    document.getElementById('product-name').textContent = product.name;
+    document.getElementById('product-price').textContent = `₹${product.price.toLocaleString('en-IN')}`;
+    document.getElementById('product-description').textContent = product.desc;
+    document.getElementById('product-category-label').textContent = `${product.gender} — ${product.category}`;
+    document.getElementById('product-badge').textContent = product.badge;
+    document.getElementById('breadcrumb-name').textContent = product.name;
+
+    if (product.img) {
+      document.getElementById('main-img').src = product.img;
+      document.getElementById('main-img').alt = product.name;
+    } else {
+      const bg = getPlaceholderBg(id);
+      document.getElementById('gallery-main').innerHTML = `<div style="width:100%;height:100%;${bg};display:flex;align-items:center;justify-content:center;"><span style="font-family:var(--font-serif);font-size:1.2rem;color:rgba(255,255,255,0.4)">${product.name}</span></div>`;
+    }
+
+    // Check wishlist state
+    const wList = getWishlist();
+    if (wList.includes(product.id)) {
+      const btn = document.getElementById('wishlist-btn');
+      btn.classList.add('active');
+      btn.querySelector('path').setAttribute('fill', 'currentColor');
+    }
+  }
+
+  function getPlaceholderBg(id) {
+    const bgs = {
+      3:'background:linear-gradient(135deg,#1a1a1a,#3a3a3a)',
+      4:'background:linear-gradient(135deg,#5a5a5a,#333)',
+      5:'background:linear-gradient(135deg,#4a4040,#6a5a5a)',
+      6:'background:linear-gradient(135deg,#e8e0d0,#c8baa8)',
+      7:'background:linear-gradient(135deg,#2a2218,#453828)',
+      9:'background:linear-gradient(135deg,#1a1510,#2e2518)',
+      11:'background:linear-gradient(135deg,#c8c0b0,#a8988a)',
+      13:'background:linear-gradient(135deg,#e0e8d8,#c0c8b0)',
+      19:'background:linear-gradient(135deg,#f0e8d8,#d8c8b0)',
+    };
+    return bgs[id] || 'background:var(--surface-container)';
+  }
+
+  function switchImg(thumb, src, alt) {
+    document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+    const mainImg = document.getElementById('main-img');
+    if (mainImg) {
+      mainImg.style.opacity = '0';
+      mainImg.style.transform = 'scale(1.02)';
+      setTimeout(() => {
+        mainImg.src = src;
+        mainImg.alt = alt;
+        mainImg.style.transition = 'opacity 0.3s, transform 0.3s';
+        mainImg.style.opacity = '1';
+        mainImg.style.transform = 'scale(1)';
+      }, 150);
+    }
+  }
+
+  function openZoom() {
+    const mainImg = document.getElementById('main-img');
+    if (!mainImg) return;
+    document.getElementById('zoom-img').src = mainImg.src;
+    document.getElementById('zoom-modal').classList.add('active');
+  }
+
+  function selectColor(el) {
+    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedColor = el.dataset.color;
+    document.getElementById('selected-color').textContent = selectedColor;
+  }
+
+  function selectSize(btn) {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedSize = btn.textContent;
+    document.getElementById('selected-size').textContent = selectedSize;
+  }
+
+  function changeQty(delta) {
+    qty = Math.max(1, Math.min(10, qty + delta));
+    document.getElementById('qty-display').textContent = qty;
+  }
+
+  function handleAddToCart() {
+    if (!selectedSize) {
+      showToast('Please select a size before adding to your archive.');
+      document.getElementById('size-grid').style.outline = '1px solid var(--primary)';
+      setTimeout(() => document.getElementById('size-grid').style.outline = '', 2000);
+      return;
+    }
+    if (!product) return;
+    addToCart({ id: product.id, name: product.name, price: product.price, color: selectedColor, size: selectedSize, qty });
+
+    // Animate button
+    const btn = document.getElementById('add-to-cart-btn');
+    btn.textContent = '✓ Added to Archive';
+    btn.style.background = 'var(--charcoal)';
+    setTimeout(() => {
+      btn.innerHTML = 'Add to Archive <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>';
+      btn.style.background = '';
+    }, 2000);
+  }
+
+  function toggleSection(header) {
+    const body = header.nextElementSibling;
+    const icon = header.querySelector('.toggle-icon');
+    const hidden = body.classList.toggle('hidden');
+    icon.textContent = hidden ? '+' : '−';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { loadProduct(); });
+</script>
+</body>
+</html>

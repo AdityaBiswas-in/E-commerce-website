@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — THE ARCHIVE</title>
+  <link rel="icon" type="image/png" href="images/Titel.png">
+  <meta name="description" content="Secure checkout at THE ARCHIVE. Complete your order securely with SSL encryption.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .checkout-layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-xl) var(--spacing-xxl);
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: var(--spacing-xxl);
+      align-items: start;
+    }
+
+    .checkout-steps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+    }
+
+    .step-item.active { color: var(--on-surface); }
+    .step-item.done { color: var(--primary); }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid currentColor;
+      font-size: 0.62rem;
+      font-weight: 600;
+    }
+
+    .step-divider { width: 24px; height: 1px; background: var(--outline-variant); }
+
+    .form-section {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .form-section-title {
+      font-family: var(--font-serif);
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--on-surface);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 1px solid rgba(205,198,179,0.2);
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); }
+
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md);
+      background: var(--surface-container-low);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: var(--transition-fast);
+      margin-bottom: 10px;
+    }
+
+    .radio-option:hover { border-color: rgba(205,198,179,0.3); }
+    .radio-option.selected { border-color: var(--primary); background: rgba(112,92,35,0.04); }
+    .radio-option input { accent-color: var(--primary); margin-top: 2px; }
+
+    .radio-label { font-size: 0.8rem; color: var(--on-surface); }
+    .radio-sublabel { font-size: 0.7rem; color: var(--on-surface-variant); margin-top: 2px; }
+    .radio-price { margin-left: auto; font-family: var(--font-serif); font-size: 0.85rem; flex-shrink: 0; }
+
+    .card-field-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--spacing-md); }
+
+    /* Payment Tabs */
+    .payment-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: var(--spacing-lg);
+      border-bottom: 1px solid rgba(205,198,179,0.2);
+    }
+
+    .pay-tab {
+      padding: 12px 18px;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: var(--transition-fast);
+      font-family: var(--font-sans);
+    }
+
+    .pay-tab:hover { color: var(--on-surface); }
+    .pay-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    .pay-panel { display: none; }
+    .pay-panel.active { display: block; }
+
+    .upi-apps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .upi-app-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 8px;
+      background: var(--surface-container-low);
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      transition: var(--transition-fast);
+    }
+
+    .upi-app-btn:hover, .upi-app-btn.selected {
+      border-color: var(--primary);
+      color: var(--on-surface);
+      background: rgba(112,92,35,0.05);
+    }
+
+    .upi-app-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .bank-list {
+      max-height: 240px;
+      overflow-y: auto;
+      border: 1px solid rgba(205,198,179,0.2);
+    }
+
+    .bank-opt {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(205,198,179,0.1);
+      font-size: 0.8rem;
+      transition: var(--transition-fast);
+    }
+
+    .bank-opt:last-child { border-bottom: none; }
+    .bank-opt:hover { background: var(--surface-container-low); }
+    .bank-opt.selected { background: rgba(112,92,35,0.05); color: var(--primary); }
+    .bank-opt input { accent-color: var(--primary); }
+
+    .bank-icon {
+      width: 32px;
+      height: 20px;
+      background: var(--surface-container-high);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.55rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--on-surface-variant);
+      flex-shrink: 0;
+    }
+
+    .wallet-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .wallet-opt {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-md);
+      background: var(--surface-container-low);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      font-size: 0.78rem;
+    }
+
+    .wallet-opt:hover, .wallet-opt.selected {
+      border-color: var(--primary);
+      background: rgba(112,92,35,0.05);
+    }
+
+    .wallet-opt input { accent-color: var(--primary); }
+
+    .order-item-mini {
+      display: flex;
+      gap: var(--spacing-sm);
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(205,198,179,0.1);
+      align-items: center;
+    }
+
+    .order-item-thumb {
+      width: 56px;
+      height: 56px;
+      background: var(--surface-container-high);
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .order-item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    .order-item-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--primary);
+      color: #fff;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1000px) {
+      .checkout-layout { grid-template-columns: 1fr; padding: 0 var(--spacing-md) var(--spacing-xl); }
+    }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .card-field-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="index.html">Home</a>
+  <a href="collections.html">Collections</a>
+  <a href="cart.html">Your Archive</a>
+</nav>
+
+<!-- Site Navigation -->
+<header class="site-nav" role="banner">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Archive</a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="cart.html">Your Archive</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="cart.html" aria-label="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>/</span>
+    <a href="cart.html">Archive</a>
+    <span>/</span>
+    <span>Checkout</span>
+  </div>
+  <h1 class="display-lg">Secure <em style="font-style:italic;color:var(--primary)">Checkout.</em></h1>
+</div>
+
+<div class="checkout-layout">
+
+  <!-- Checkout Form -->
+  <div>
+    <!-- Steps -->
+    <div class="checkout-steps" aria-label="Checkout progress">
+      <div class="step-item active" aria-current="step">
+        <span class="step-num">1</span>
+        <span>Information</span>
+      </div>
+      <div class="step-divider" aria-hidden="true"></div>
+      <div class="step-item" id="step-shipping-label">
+        <span class="step-num">2</span>
+        <span>Shipping</span>
+      </div>
+      <div class="step-divider" aria-hidden="true"></div>
+      <div class="step-item" id="step-payment-label">
+        <span class="step-num">3</span>
+        <span>Payment</span>
+      </div>
+    </div>
+
+    <!-- Section 1: Contact -->
+    <div class="form-section" id="section-contact">
+      <h2 class="form-section-title">Contact Information</h2>
+      <div class="form-group">
+        <input type="email" id="email" placeholder=" " required autocomplete="email">
+        <label for="email">Email Address</label>
+      </div>
+    </div>    <!-- Section 2: Shipping Address -->
+    <div class="form-section" id="section-address">
+      <h2 class="form-section-title">Select a delivery address</h2>
+      
+      <div id="address-book-list" style="margin-bottom:var(--spacing-lg);">
+        <!-- Amazon-style address cards will be injected here -->
+      </div>
+
+      <div style="margin-bottom:var(--spacing-lg);">
+        <button class="btn-text" id="add-new-addr-btn" onclick="useNewAddressUI()" style="color:var(--primary); font-size:0.85rem; font-weight:600;">+ Add a new delivery address</button>
+      </div>
+
+      <div id="address-form-fields" style="display:none; border-top:1px solid var(--outline-variant); padding-top:var(--spacing-md);">
+        <h3 id="form-context-title" style="font-family:var(--font-serif); font-size:1.1rem; margin-bottom:var(--spacing-md);">Add a new address</h3>
+        <input type="hidden" id="editing-addr-id" value="">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" id="first-name" placeholder=" " autocomplete="given-name">
+            <label for="first-name">First Name</label>
+          </div>
+          <div class="form-group">
+            <input type="text" id="last-name" placeholder=" " autocomplete="family-name">
+            <label for="last-name">Last Name</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="text" id="address1" placeholder=" " autocomplete="address-line1">
+          <label for="address1">Address</label>
+        </div>
+        <div class="form-group">
+          <input type="text" id="address2" placeholder=" " autocomplete="address-line2">
+          <label for="address2">Apartment, Suite, etc. (optional)</label>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" id="city" placeholder=" " autocomplete="address-level2">
+            <label for="city">City</label>
+          </div>
+          <div class="form-group">
+            <input type="text" id="zip" placeholder=" " autocomplete="postal-code">
+            <label for="zip">Postal Code</label>
+          </div>
+        </div>
+        <div class="form-group" style="position:static;">
+          <label for="country" style="position:static;top:auto;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--on-surface-variant);display:block;margin-bottom:6px;">Country</label>
+          <select id="country" autocomplete="country" style="width:100%;background:transparent;border:none;border-bottom:1px solid var(--outline-variant);padding:10px 0 8px;font-size:0.875rem;color:var(--on-surface);outline:none;font-family:var(--font-sans);cursor:pointer;">
+            <option value="IN" selected>India</option>
+            <option value="US">United States</option>
+            <option value="GB">United Kingdom</option>
+            <option value="FR">France</option>
+            <option value="DE">Germany</option>
+            <option value="IT">Italy</option>
+            <option value="JP">Japan</option>
+            <option value="AU">Australia</option>
+            <option value="CA">Canada</option>
+            <option value="AE">UAE</option>
+            <option value="SG">Singapore</option>
+            <option value="NZ">New Zealand</option>
+          </select>
+        </div>
+        <div style="margin-top:12px; display:flex; gap:12px;">
+           <button class="btn btn-primary" onclick="handleAddressSubmit()" id="addr-submit-btn" style="padding:8px 20px; font-size:0.75rem;">Save &amp; Use</button>
+           <button class="btn btn-secondary" onclick="cancelAddressEdit()" style="padding:8px 20px; font-size:0.75rem;">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Shipping Method -->
+    <div class="form-section" id="section-shipping">
+      <h2 class="form-section-title">Shipping Method</h2>
+      <div class="radio-option selected" onclick="selectShipping(this,'standard',0)" id="ship-std">
+        <input type="radio" name="shipping" value="standard" checked aria-label="Standard shipping">
+        <div>
+          <p class="radio-label">Standard Delivery</p>
+          <p class="radio-sublabel">5–8 Business Days</p>
+        </div>
+        <span class="radio-price" id="ship-std-price">Free</span>
+      </div>
+      <div class="radio-option" onclick="selectShipping(this,'express',99)">
+        <input type="radio" name="shipping" value="express" aria-label="Express shipping">
+        <div>
+          <p class="radio-label">Express Delivery</p>
+          <p class="radio-sublabel">2–3 Business Days</p>
+        </div>
+        <span class="radio-price">₹99</span>
+      </div>
+      <div class="radio-option" onclick="selectShipping(this,'overnight',199)">
+        <input type="radio" name="shipping" value="overnight" aria-label="Express India Post">
+        <div>
+          <p class="radio-label">Express India Post</p>
+          <p class="radio-sublabel">Next Business Day</p>
+        </div>
+        <span class="radio-price">₹199</span>
+      </div>
+    </div>
+
+    <!-- Section 4: Payment -->
+    <div class="form-section" id="section-payment">
+      <h2 class="form-section-title">Payment</h2>
+      <div style="padding:10px;background:rgba(112,92,35,0.06);display:flex;align-items:center;gap:8px;margin-bottom:var(--spacing-md);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <p style="font-size:0.72rem;color:var(--on-surface-variant);">All transactions are 100% secure &amp; encrypted. Powered by Razorpay.</p>
+      </div>
+
+      <!-- Payment Method Tabs -->
+      <div class="payment-tabs" role="tablist" aria-label="Payment methods">
+        <button class="pay-tab active" role="tab" aria-selected="true" id="tab-card" onclick="switchPay('card',this)">Credit / Debit Card</button>
+        <button class="pay-tab" role="tab" aria-selected="false" id="tab-upi" onclick="switchPay('upi',this)">UPI</button>
+        <button class="pay-tab" role="tab" aria-selected="false" id="tab-nb" onclick="switchPay('netbanking',this)">Net Banking</button>
+        <button class="pay-tab" role="tab" aria-selected="false" id="tab-wallet" onclick="switchPay('wallet',this)">Wallets</button>
+      </div>
+
+      <!-- Card Panel -->
+      <div class="pay-panel active" id="panel-card" role="tabpanel">
+        <div class="form-group">
+          <input type="text" id="card-number" placeholder=" " maxlength="19" oninput="formatCard(this)" autocomplete="cc-number">
+          <label for="card-number">Card Number</label>
+        </div>
+        <div class="card-field-row">
+          <div class="form-group">
+            <input type="text" id="card-expiry" placeholder=" " maxlength="5" oninput="formatExpiry(this)" autocomplete="cc-exp">
+            <label for="card-expiry">MM / YY</label>
+          </div>
+          <div class="form-group">
+            <input type="text" id="card-cvv" placeholder=" " maxlength="4" autocomplete="cc-csc">
+            <label for="card-cvv">CVV</label>
+          </div>
+          <div class="form-group">
+            <input type="text" id="card-name" placeholder=" " autocomplete="cc-name">
+            <label for="card-name">Name on Card</label>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+          <div style="padding:3px 10px;background:var(--surface-container);font-size:0.62rem;font-weight:700;letter-spacing:0.05em;color:var(--on-surface-variant)">VISA</div>
+          <div style="padding:3px 10px;background:var(--surface-container);font-size:0.62rem;font-weight:700;letter-spacing:0.05em;color:var(--on-surface-variant)">MASTERCARD</div>
+          <div style="padding:3px 10px;background:var(--surface-container);font-size:0.62rem;font-weight:700;letter-spacing:0.05em;color:var(--on-surface-variant)">AMEX</div>
+          <div style="padding:3px 10px;background:var(--surface-container);font-size:0.62rem;font-weight:700;letter-spacing:0.05em;color:var(--on-surface-variant)">RUPAY</div>
+        </div>
+      </div>
+
+      <!-- UPI Panel -->
+      <div class="pay-panel" id="panel-upi" role="tabpanel">
+        <p class="label-md" style="margin-bottom:var(--spacing-md);">Choose UPI App</p>
+        <div class="upi-apps">
+          <button class="upi-app-btn" onclick="selectUpiApp(this,'PhonePe')">
+            <div class="upi-app-icon" style="background:#5f259f;color:#fff;">Pe</div>
+            <span>PhonePe</span>
+          </button>
+          <button class="upi-app-btn" onclick="selectUpiApp(this,'GPay')">
+            <div class="upi-app-icon" style="background:#fff;border:1px solid #eee;">G</div>
+            <span>Google Pay</span>
+          </button>
+          <button class="upi-app-btn" onclick="selectUpiApp(this,'Paytm')">
+            <div class="upi-app-icon" style="background:#002970;color:#00baf2;">Pa</div>
+            <span>Paytm</span>
+          </button>
+          <button class="upi-app-btn" onclick="selectUpiApp(this,'BHIM')">
+            <div class="upi-app-icon" style="background:#f47920;color:#fff;">B</div>
+            <span>BHIM</span>
+          </button>
+          <button class="upi-app-btn" onclick="selectUpiApp(this,'AmazonPay')">
+            <div class="upi-app-icon" style="background:#ff9900;color:#1a1a1a;font-size:0.7rem;">APay</div>
+            <span>Amazon Pay</span>
+          </button>
+          <button class="upi-app-btn" onclick="selectUpiApp(this,'CRED')">
+            <div class="upi-app-icon" style="background:#1a1a1a;color:#d4af37;">Cr</div>
+            <span>CRED</span>
+          </button>
+          <button class="upi-app-btn" onclick="selectUpiApp(this,'Mobikwik')">
+            <div class="upi-app-icon" style="background:#2196f3;color:#fff;font-size:0.7rem;">MKW</div>
+            <span>Mobikwik</span>
+          </button>
+          <button class="upi-app-btn" onclick="selectUpiApp(this,'Other')">
+            <div class="upi-app-icon" style="background:var(--surface-container-highest);color:var(--on-surface-variant);">UPI</div>
+            <span>Other</span>
+          </button>
+        </div>
+        <p style="font-size:0.7rem;color:var(--on-surface-variant);margin-bottom:10px;">— or enter UPI ID manually —</p>
+        <div class="form-group">
+          <input type="text" id="upi-id" placeholder=" " pattern="[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}">
+          <label for="upi-id">UPI ID (e.g. name@upi)</label>
+        </div>
+        <p id="upi-app-selected" style="font-size:0.72rem;color:var(--primary);margin-top:6px;display:none;">&#10003; App selected. Click &ldquo;Place Order&rdquo; to open in app.</p>
+      </div>
+
+      <!-- Net Banking Panel -->
+      <div class="pay-panel" id="panel-netbanking" role="tabpanel">
+        <p class="label-md" style="margin-bottom:var(--spacing-md);">Select Your Bank</p>
+        <div class="form-group" style="margin-bottom:var(--spacing-md);">
+          <input type="text" id="bank-search" placeholder=" " oninput="filterBanks(this.value)">
+          <label for="bank-search">Search bank name…</label>
+        </div>
+        <div class="bank-list" id="bank-list" role="listbox">
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">SBI</div><span>State Bank of India</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">HDFC</div><span>HDFC Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">ICICI</div><span>ICICI Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">AXIS</div><span>Axis Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">KOTAK</div><span>Kotak Mahindra Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">PNB</div><span>Punjab National Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">BOB</div><span>Bank of Baroda</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">CANARA</div><span>Canara Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">BOI</div><span>Bank of India</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">IDBI</div><span>IDBI Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">YES</div><span>Yes Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">INDUS</div><span>IndusInd Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">RBL</div><span>RBL Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">FED</div><span>Federal Bank</span></div>
+          <div class="bank-opt" onclick="selectBank(this)" role="option"><div class="bank-icon">UCO</div><span>UCO Bank</span></div>
+        </div>
+        <p id="bank-selected" style="font-size:0.72rem;color:var(--primary);margin-top:10px;display:none;">&#10003; Bank selected. You will be redirected to log in.</p>
+      </div>
+
+      <!-- Wallets Panel -->
+      <div class="pay-panel" id="panel-wallet" role="tabpanel">
+        <p class="label-md" style="margin-bottom:var(--spacing-md);">Select Wallet</p>
+        <div class="wallet-grid">
+          <label class="wallet-opt">
+            <input type="radio" name="wallet" value="Paytm Wallet" onclick="highlightWallet(this.closest('.wallet-opt'))" style="accent-color:var(--primary);">
+            <span style="font-size:1.3rem;">&#128179;</span>
+            <div><p style="font-size:0.8rem;">Paytm Wallet</p><p style="font-size:0.65rem;color:var(--on-surface-variant);">Balance: Check in app</p></div>
+          </label>
+          <label class="wallet-opt">
+            <input type="radio" name="wallet" value="PhonePe Wallet" onclick="highlightWallet(this.closest('.wallet-opt'))" style="accent-color:var(--primary);">
+            <span style="font-size:1.3rem;">&#128176;</span>
+            <div><p style="font-size:0.8rem;">PhonePe Wallet</p><p style="font-size:0.65rem;color:var(--on-surface-variant);">Balance: Check in app</p></div>
+          </label>
+          <label class="wallet-opt">
+            <input type="radio" name="wallet" value="Amazon Pay" onclick="highlightWallet(this.closest('.wallet-opt'))" style="accent-color:var(--primary);">
+            <span style="font-size:1.3rem;">&#127881;</span>
+            <div><p style="font-size:0.8rem;">Amazon Pay</p><p style="font-size:0.65rem;color:var(--on-surface-variant);">Balance: Check in app</p></div>
+          </label>
+          <label class="wallet-opt">
+            <input type="radio" name="wallet" value="Freecharge" onclick="highlightWallet(this.closest('.wallet-opt'))" style="accent-color:var(--primary);">
+            <span style="font-size:1.3rem;">&#9889;</span>
+            <div><p style="font-size:0.8rem;">Freecharge</p><p style="font-size:0.65rem;color:var(--on-surface-variant);">Balance: Check in app</p></div>
+          </label>
+          <label class="wallet-opt">
+            <input type="radio" name="wallet" value="Mobikwik" onclick="highlightWallet(this.closest('.wallet-opt'))" style="accent-color:var(--primary);">
+            <span style="font-size:1.3rem;">&#128178;</span>
+            <div><p style="font-size:0.8rem;">Mobikwik</p><p style="font-size:0.65rem;color:var(--on-surface-variant);">Balance: Check in app</p></div>
+          </label>
+          <label class="wallet-opt">
+            <input type="radio" name="wallet" value="Ola Money" onclick="highlightWallet(this.closest('.wallet-opt'))" style="accent-color:var(--primary);">
+            <span style="font-size:1.3rem;">&#127881;</span>
+            <div><p style="font-size:0.8rem;">Ola Money</p><p style="font-size:0.65rem;color:var(--on-surface-variant);">Balance: Check in app</p></div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Place Order Button -->
+    <button class="btn btn-primary btn-full" id="place-order-btn" onclick="placeOrder()" style="font-size:0.75rem;letter-spacing:0.15em;padding:18px;">
+      Place Order — Confirm Curation
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+    <p style="text-align:center;font-size:0.65rem;color:var(--on-surface-variant);margin-top:var(--spacing-sm);letter-spacing:0.06em;">By placing your order, you agree to our Terms of Service and Privacy Policy.</p>
+  </div>
+
+  <!-- Order Summary Panel -->
+  <div class="summary-panel" aria-label="Order summary">
+    <p class="label-md" style="margin-bottom:var(--spacing-md);">Order Summary</p>
+
+    <!-- Items List -->
+    <div id="checkout-items" aria-live="polite">
+      <!-- populated by JS -->
+    </div>
+
+    <div class="divider" style="margin:var(--spacing-sm) 0;"></div>
+
+    <div class="summary-row">
+      <span>Subtotal</span>
+      <span id="co-subtotal">₹0</span>
+    </div>
+    <div class="summary-row">
+      <span>Shipping</span>
+      <span id="co-shipping">₹0</span>
+    </div>
+    <div class="summary-row">
+      <span>Duties &amp; Taxes</span>
+      <span>Included</span>
+    </div>
+    <div class="summary-total">
+      <span class="label">Total</span>
+      <span class="amount" id="co-total">₹0</span>
+    </div>
+
+    <!-- Security badges -->
+    <div style="margin-top:var(--spacing-lg);padding:var(--spacing-md);background:var(--surface-container-low);text-align:center;">
+      <p class="label-md" style="margin-bottom:8px;">Heritage Guarantee</p>
+      <p style="font-size:0.72rem;color:var(--on-surface-variant);line-height:1.5;">Every item authenticated. Every stitch inspected. Your satisfaction, our legacy.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-brand-name">The Archive</p>
+      <p class="footer-tagline">A curated study of architecture and apparel.</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Collections</p>
+      <nav class="footer-links"><a href="collections.html">All Items</a></nav>
+    </div>
+    <div>
+      <p class="footer-col-title">Support</p>
+      <nav class="footer-links"><a href="#">Shipping</a><a href="#">Returns</a></nav>
+    </div>
+    <div>
+      <p class="footer-col-title">The Atelier</p>
+      <nav class="footer-links"><a href="#">About</a></nav>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copyright">© 2024 The Editorial Archive. All rights reserved.</p>
+    <div class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  let shippingCost = 0;
+
+  function renderCheckoutItems() {
+    const cart = getCart();
+    if (cart.length === 0) {
+      window.location.href = 'cart.html';
+      return;
+    }
+
+    const container = document.getElementById('checkout-items');
+    container.innerHTML = cart.map(item => {
+      let img = '';
+      if (item.id === 1) img = 'images/overcoat.png';
+      else if (item.id === 2) img = 'images/shirt.png';
+      else if (item.id === 3) img = 'images/bespoke_bag.png';
+      else if (item.id === 4) img = 'images/womens_trousers.png';
+      else if (item.id === 5) img = 'images/womens_blazer.png';
+      else if (item.id === 6) img = 'images/silk_dress.png';
+      else if (item.id === 7) img = 'images/leather_loafers.png';
+      else if (item.id >= 10) img = 'images/media_.png'; // Fallback for newer items
+
+      return `
+        <div class="order-item-mini">
+          <div class="order-item-thumb" style="position:relative;">
+            ${img ? `<img src="${img}" alt="${item.name}">` : `<div style="width:100%;height:100%;background:var(--surface-container);display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-family:var(--font-serif);color:var(--on-surface-variant)">${item.name.split(' ')[0]}</div>`}
+            <span class="order-item-badge">${item.qty || 1}</span>
+          </div>
+          <div style="flex:1;">
+            <p style="font-family:var(--font-serif);font-size:0.85rem;color:var(--on-surface)">${item.name}</p>
+            <p style="font-size:0.68rem;color:var(--on-surface-variant);letter-spacing:0.08em;text-transform:uppercase">${item.color} / ${item.size}</p>
+          </div>
+          <p style="font-family:var(--font-serif);font-size:0.875rem;flex-shrink:0">₹${(item.price*(item.qty||1)).toLocaleString('en-IN')}</p>
+        </div>
+      `;
+    }).join('');
+
+    const subtotal = getCartTotal();
+    shippingCost = (subtotal === 0) ? 0 : (subtotal >= 41500 ? 0 : 99);
+    updateCheckoutSummary();
+  }
+
+  function updateCheckoutSummary() {
+    const subtotal = getCartTotal();
+    const total = subtotal + shippingCost;
+    document.getElementById('co-subtotal').textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+    document.getElementById('co-shipping').textContent = subtotal === 0 ? '₹0' : (shippingCost === 0 ? 'Free' : `₹${shippingCost.toLocaleString('en-IN')}`);
+    document.getElementById('co-total').textContent = `₹${total.toLocaleString('en-IN')}`;
+  }
+
+  function selectShipping(el, type, cost) {
+    document.querySelectorAll('.radio-option').forEach(r => r.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+    shippingCost = getCartTotal() >= 999 && cost === 0 ? 0 : cost;
+    updateCheckoutSummary();
+  }
+
+  function formatCard(input) {
+    let val = input.value.replace(/\D/g,'');
+    val = val.match(/.{1,4}/g)?.join(' ') || val;
+    input.value = val;
+  }
+
+  function formatExpiry(input) {
+    let val = input.value.replace(/\D/g,'');
+    if (val.length >= 2) val = val.substring(0,2) + ' / ' + val.substring(2);
+    input.value = val;
+  }
+
+  function placeOrder() {
+    // Validate required fields
+    const required = ['email', 'first-name', 'last-name', 'address1', 'city', 'zip', 'country'];
+    let valid = true;
+    required.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el || !el.value.trim()) {
+        el.style.borderBottom = '1px solid var(--error)';
+        valid = false;
+        setTimeout(() => el.style.borderBottom = '', 2000);
+      }
+    });
+
+    if (!valid) {
+      showToast('Please complete all required fields to proceed.');
+      return;
+    }
+
+    const activeTab = document.querySelector('.pay-tab.active').id;
+    let paymentValid = false;
+
+    if (activeTab === 'tab-card') {
+      paymentValid = !!document.getElementById('card-number').value.trim();
+      if (!paymentValid) { showToast('Please enter your card number to proceed.'); return; }
+    } else if (activeTab === 'tab-upi') {
+      const upiId = document.getElementById('upi-id').value.trim();
+      const upiApp = document.querySelector('.upi-app-btn.selected');
+      paymentValid = !!upiApp || upiId.includes('@');
+      if (!paymentValid) { showToast('Please select a UPI app or enter your UPI ID.'); return; }
+    } else if (activeTab === 'tab-nb') {
+      paymentValid = !!document.querySelector('.bank-opt.selected');
+      if (!paymentValid) { showToast('Please select your bank to proceed.'); return; }
+    } else if (activeTab === 'tab-wallet') {
+      paymentValid = !!document.querySelector('input[name="wallet"]:checked');
+      if (!paymentValid) { showToast('Please select a wallet to proceed.'); return; }
+    }
+
+    // Place order animation
+    const btn = document.getElementById('place-order-btn');
+    btn.textContent = 'Processing your Curation…';
+    btn.style.background = 'var(--charcoal)';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      // Save Order Logic
+      const sessionEmail = localStorage.getItem('archive_active_session');
+      const cartItems = getCart();
+      if (sessionEmail && cartItems.length > 0) {
+          let usersDB = {};
+          try { usersDB = JSON.parse(localStorage.getItem('archive_users')) || {}; } catch(e) {}
+          if (usersDB[sessionEmail]) {
+              const orderId = 'ARC-2024-' + Math.floor(1000 + Math.random() * 9000);
+              const orderDate = new Date();
+              const estDelivery = new Date(orderDate.getTime() + 5*24*60*60*1000);
+              
+              const newOrder = {
+                  id: orderId,
+                  date: orderDate.toISOString(),
+                  deliveryDate: estDelivery.toISOString(),
+                  items: cartItems,
+                  total: getCartTotal() + shippingCost,
+                  status: 'Processing'
+              };
+              
+              if(!usersDB[sessionEmail].orders) usersDB[sessionEmail].orders = [];
+              usersDB[sessionEmail].orders.unshift(newOrder);
+              
+              const address = {
+                  firstName: document.getElementById('first-name').value.trim(),
+                  lastName: document.getElementById('last-name').value.trim(),
+                  address1: document.getElementById('address1').value.trim(),
+                  address2: document.getElementById('address2').value.trim(),
+                  city: document.getElementById('city').value.trim(),
+                  zip: document.getElementById('zip').value.trim(),
+                  country: document.getElementById('country').value
+              };
+              usersDB[sessionEmail].address = address;
+
+              // Capture Payment Info
+              const activeTab = document.querySelector('.pay-tab.active').id;
+              let paymentSummary = '';
+              let paymentType = '';
+              
+              if (activeTab === 'tab-card') {
+                const cardNum = document.getElementById('card-number').value.trim();
+                paymentSummary = `Ending in •••• ${cardNum.slice(-4)}`;
+                paymentType = 'Card';
+              } else if (activeTab === 'tab-upi') {
+                const upiId = document.getElementById('upi-id').value.trim();
+                const upiApp = document.querySelector('.upi-app-btn.selected')?.querySelector('span')?.textContent || 'UPI';
+                paymentSummary = upiId ? upiId : upiApp;
+                paymentType = 'UPI';
+              } else if (activeTab === 'tab-nb') {
+                paymentSummary = document.querySelector('.bank-opt.selected')?.querySelector('span')?.textContent || 'Net Banking';
+                paymentType = 'Net Banking';
+              } else if (activeTab === 'tab-wallet') {
+                paymentSummary = document.querySelector('input[name="wallet"]:checked')?.value || 'Wallet';
+                paymentType = 'Wallet';
+              }
+
+              newOrder.payment = { type: paymentType, summary: paymentSummary };
+              newOrder.address = address;
+              newOrder.shippingSpeed = document.querySelector('input[name="shipping"]:checked')?.closest('.radio-option')?.querySelector('.radio-label')?.textContent || 'Standard Delivery';
+              newOrder.contact = { email: document.getElementById('email').value.trim() };
+
+              localStorage.setItem('archive_users', JSON.stringify(usersDB));
+              sessionStorage.setItem('last_order_id', orderId);
+          }
+      }
+      
+      // Clear cart after order is saved
+      localStorage.setItem('archive_cart', JSON.stringify([]));
+
+      window.location.href = 'confirmation.html';
+    }, 1500);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderCheckoutItems();
+    renderAddressBook();
+    
+    const sessionEmail = getSessionEmail();
+    if (sessionEmail) document.getElementById('email').value = sessionEmail;
+  });
+
+  function renderAddressBook() {
+    const addresses = getAddresses();
+    const container = document.getElementById('address-book-list');
+    container.innerHTML = '';
+
+    if (addresses.length === 0) {
+      useNewAddressUI();
+      document.getElementById('add-new-addr-btn').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('add-new-addr-btn').style.display = 'inline-block';
+
+    addresses.forEach((addr, idx) => {
+      const isSelected = idx === 0; // Default to first for now
+      const card = document.createElement('div');
+      card.className = `radio-option ${isSelected ? 'selected' : ''}`;
+      card.style.alignItems = 'flex-start';
+      card.onclick = (e) => {
+        if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+          useSavedAddressUI(addr.id, card);
+        }
+      };
+      card.innerHTML = `
+        <input type="radio" name="addr-choice" value="${addr.id}" ${isSelected ? 'checked' : ''} style="margin-top:4px;">
+        <div style="flex:1">
+          <p style="font-weight:700; font-size:0.9rem; margin-bottom:2px;">${addr.firstName} ${addr.lastName}</p>
+          <p style="font-size:0.85rem; color:var(--on-surface-variant); line-height:1.4;">
+            ${addr.address1}, ${addr.address2 ? addr.address2 + ', ' : ''}${addr.city}, ${addr.zip}, ${addr.country || 'India'}
+          </p>
+          <div style="margin-top:8px; display:flex; gap:12px;">
+            <a href="javascript:void(0)" onclick="editSavedAddress('${addr.id}')" style="font-size:0.72rem; color:var(--primary); text-decoration:none;">Edit address</a>
+            <span style="color:var(--outline-variant); font-size:0.7rem;">|</span>
+            <a href="javascript:void(0)" onclick="deleteArchivedAddress('${addr.id}')" style="font-size:0.72rem; color:#c0392b; text-decoration:none;">Remove</a>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+      if (isSelected) selectAddressInternally(addr);
+    });
+  }
+
+  function selectAddressInternally(addr) {
+    // Fill hidden fields for placeOrder logic
+    document.getElementById('first-name').value = addr.firstName || '';
+    document.getElementById('last-name').value = addr.lastName || '';
+    document.getElementById('address1').value = addr.address1 || '';
+    document.getElementById('address2').value = addr.address2 || '';
+    document.getElementById('city').value = addr.city || '';
+    document.getElementById('zip').value = addr.zip || '';
+    document.getElementById('country').value = addr.country || 'IN';
+  }
+
+  function useSavedAddressUI(id, el) {
+    const addresses = getAddresses();
+    const addr = addresses.find(a => a.id == id);
+    if (!addr) return;
+
+    document.querySelectorAll('.radio-option').forEach(opt => opt.classList.remove('selected'));
+    document.querySelectorAll('[name="addr-choice"]').forEach(input => input.checked = false);
+    
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+    
+    selectAddressInternally(addr);
+    cancelAddressEdit(); // Hide form if open
+  }
+
+  function editSavedAddress(id) {
+    const addresses = getAddresses();
+    const addr = addresses.find(a => a.id == id);
+    if (!addr) return;
+
+    useNewAddressUI(); // Show form
+    document.getElementById('form-context-title').textContent = 'Update delivery address';
+    document.getElementById('editing-addr-id').value = id;
+    document.getElementById('addr-submit-btn').textContent = 'Update Address';
+
+    // Populate fields
+    document.getElementById('first-name').value = addr.firstName || '';
+    document.getElementById('last-name').value = addr.lastName || '';
+    document.getElementById('address1').value = addr.address1 || '';
+    document.getElementById('address2').value = addr.address2 || '';
+    document.getElementById('city').value = addr.city || '';
+    document.getElementById('zip').value = addr.zip || '';
+    document.getElementById('country').value = addr.country || 'IN';
+  }
+
+  function useNewAddressUI() {
+    document.getElementById('address-form-fields').style.display = 'block';
+    document.getElementById('add-new-addr-btn').style.display = 'none';
+    document.getElementById('form-context-title').textContent = 'Add a new address';
+    document.getElementById('editing-addr-id').value = '';
+    document.getElementById('addr-submit-btn').textContent = 'Save & Use';
+    
+    // Clear fields
+    ['first-name','last-name','address1','address2','city','zip'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('country').value = 'IN';
+  }
+
+  function cancelAddressEdit() {
+    document.getElementById('address-form-fields').style.display = 'none';
+    const addresses = getAddresses();
+    if (addresses.length > 0) {
+      document.getElementById('add-new-addr-btn').style.display = 'inline-block';
+    }
+  }
+
+  function deleteArchivedAddress(id) {
+    if (confirm('Are you sure you want to remove this address?')) {
+      deleteAddress(id);
+      renderAddressBook();
+      showToast('Address removed from archive.');
+    }
+  }
+
+  function handleAddressSubmit() {
+    const id = document.getElementById('editing-addr-id').value;
+    const addrData = {
+      firstName: document.getElementById('first-name').value.trim(),
+      lastName: document.getElementById('last-name').value.trim(),
+      address1: document.getElementById('address1').value.trim(),
+      address2: document.getElementById('address2').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      zip: document.getElementById('zip').value.trim(),
+      country: document.getElementById('country').value
+    };
+
+    if (!addrData.firstName || !addrData.address1 || !addrData.city) {
+      showToast('Please fill in all required coordinates.');
+      return;
+    }
+
+    if (id) {
+      updateAddress(id, addrData);
+      showToast('Address updated.');
+    } else {
+      addAddress(addrData);
+      showToast('New address saved.');
+    }
+
+    renderAddressBook();
+    cancelAddressEdit();
+  }
+
+  let selectedUpiApp = null;
+  let selectedBank = null;
+
+  function switchPay(tab, btn) {
+    document.querySelectorAll('.pay-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+    document.querySelectorAll('.pay-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected','true');
+    document.getElementById('panel-' + tab).classList.add('active');
+  }
+
+  function selectUpiApp(btn, appName) {
+    document.querySelectorAll('.upi-app-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedUpiApp = appName;
+    const msg = document.getElementById('upi-app-selected');
+    msg.textContent = `✓ ${appName} selected. Click "Place Order" to complete payment.`;
+    msg.style.display = 'block';
+  }
+
+  function selectBank(el) {
+    document.querySelectorAll('.bank-opt').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedBank = el.querySelector('span').textContent;
+    const msg = document.getElementById('bank-selected');
+    msg.textContent = `✓ ${selectedBank} selected. You will be redirected to log in.`;
+    msg.style.display = 'block';
+  }
+
+  function filterBanks(q) {
+    const opts = document.querySelectorAll('.bank-opt');
+    opts.forEach(opt => {
+      const name = opt.querySelector('span').textContent.toLowerCase();
+      opt.style.display = name.includes(q.toLowerCase()) ? '' : 'none';
+    });
+  }
+
+  function highlightWallet(el) {
+    document.querySelectorAll('.wallet-opt').forEach(w => w.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+</script>
+</body>
+</html>

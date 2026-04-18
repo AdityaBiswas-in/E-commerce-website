@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE ARCHIVE — Luxury</title>
+  <link rel="icon" type="image/png" href="images/Titel.png">
+  <meta name="description" content="A curated study of architecture and apparel. Explore our inaugural collection of structured essentials designed for the modern atelier.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Homepage-specific styles */
+    .collections-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 2px;
+      background: var(--surface-container-high);
+    }
+
+    .collection-tile {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface-container);
+      aspect-ratio: 3/4;
+      cursor: pointer;
+    }
+
+    .collection-tile:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+      aspect-ratio: auto;
+    }
+
+    .collection-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .collection-tile:hover img { transform: scale(1.04); }
+
+    .collection-tile-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(28,27,27,0.65) 0%, rgba(28,27,27,0.05) 60%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: var(--spacing-lg);
+      transition: var(--transition-smooth);
+    }
+
+    .tile-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 6px;
+    }
+
+    .tile-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.95);
+      line-height: 1.2;
+    }
+
+    .tile-cta {
+      font-size: 0.62rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-top: 8px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: var(--transition-smooth);
+    }
+
+    .collection-tile:hover .tile-cta {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Placeholder colored panels for tiles */
+    .tile-bg-1 { background: linear-gradient(135deg, #c8bda8, #9e8e78); }
+    .tile-bg-2 { background: linear-gradient(135deg, #7a7a7a, #444); }
+    .tile-bg-3 { background: linear-gradient(135deg, #b5a990, #8a7d68); }
+    .tile-bg-4 { background: linear-gradient(135deg, #3a3a3a, #2a2a2a); }
+    .tile-bg-5 { background: linear-gradient(135deg, #d4c9b0, #a89980); }
+
+    .collections-wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    .atelier-section {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: var(--spacing-xxl) var(--spacing-xl);
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: var(--spacing-xxl);
+      align-items: center;
+    }
+
+    .atelier-text .headline-md { margin-bottom: var(--spacing-md); }
+    .atelier-text .body-md { margin-bottom: var(--spacing-lg); }
+
+    .atelier-features { display: flex; flex-direction: column; gap: var(--spacing-md); }
+
+    .atelier-feature {
+      display: flex;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+      background: var(--surface-container-low);
+      transition: var(--transition-smooth);
+    }
+
+    .atelier-feature:hover { background: var(--surface-container); }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(112,92,35,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .feature-text .headline-sm { font-size: 0.9rem; margin-bottom: 4px; }
+    .feature-text .body-md { font-size: 0.8rem; }
+
+    @media (max-width: 900px) {
+      .collections-grid { grid-template-columns: 1fr 1fr; }
+      .collection-tile:first-child { grid-column: 1 / -1; aspect-ratio: 16/9; }
+      .atelier-section { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .collections-grid { grid-template-columns: 1fr; }
+      .collection-tile:first-child { aspect-ratio: 4/3; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile Navigation">
+  <a href="index.html">Home</a>
+  <a href="collections.html">Collections</a>
+  <a href="about.html">About</a>
+  <a href="signin.html">My Account</a>
+</nav>
+
+<!-- Site Navigation -->
+<header class="site-nav" role="banner">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Archive</a>
+
+    <nav class="nav-links" aria-label="Primary Navigation">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="nav-icon-btn" href="signin.html" aria-label="Account" title="Sign In">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </a>
+      <button class="nav-icon-btn" aria-label="Search" id="search-btn" onclick="document.getElementById('search-modal').style.display='flex'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <a class="nav-icon-btn" href="cart.html" aria-label="Shopping cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count" aria-live="polite">0</span>
+      </a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Search Modal -->
+<div id="search-modal" style="display:none;position:fixed;inset:0;z-index:2000;background:rgba(252,249,248,0.97);align-items:center;justify-content:center;">
+  <button onclick="document.getElementById('search-modal').style.display='none'" style="position:absolute;top:24px;right:24px;font-size:1.5rem;background:none;border:none;cursor:pointer;color:var(--on-surface-variant)">✕</button>
+  <div style="width:100%;max-width:600px;padding:0 2rem;">
+    <p class="label-md" style="margin-bottom:1rem;color:var(--primary)">Search The Archive</p>
+    <input id="site-search" type="text" placeholder="Search collections, pieces, materials…" style="width:100%;font-family:var(--font-serif);font-size:2rem;font-weight:300;border:none;border-bottom:1px solid var(--outline-variant);padding:1rem 0;background:transparent;outline:none;color:var(--on-surface);">
+    <div style="margin-top:1.5rem;" id="search-suggestions">
+      <p class="label-md" style="margin-bottom:0.75rem">Popular</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <a href="collections.html" class="badge">Outerwear</a>
+        <a href="collections.html" class="badge">Knitwear</a>
+        <a href="collections.html" class="badge">Footwear</a>
+        <a href="collections.html" class="badge">Accessories</a>
+        <a href="collections.html" class="badge">New Arrivals</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== HERO ======================== -->
+<section class="hero-section" aria-label="Hero">
+  <div class="hero-content">
+    <div class="hero-text-panel">
+      <p class="hero-eyebrow reveal">Spring / Summer 2024 — Inaugural Collection</p>
+      <h1 class="hero-title reveal">The Silence<br>of <em>Form.</em></h1>
+      <p class="hero-desc reveal">A curated study of architecture and apparel. Structured essentials, heritage materials, and artisanal mastery — designed for the modern atelier.</p>
+      <div class="hero-actions reveal">
+        <a href="collections.html" class="btn btn-primary">
+          Explore Collection
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#essentials" class="btn btn-text">View Essentials</a>
+      </div>
+
+      <div style="margin-top:var(--spacing-xxl);padding-top:var(--spacing-lg);border-top:1px solid rgba(205,198,179,0.2);" class="reveal">
+        <div style="display:flex;gap:var(--spacing-xl);">
+          <div>
+            <p style="font-family:var(--font-serif);font-size:1.75rem;font-weight:300;color:var(--on-surface);">142</p>
+            <p class="label-md">Signature Pieces</p>
+          </div>
+          <div>
+            <p style="font-family:var(--font-serif);font-size:1.75rem;font-weight:300;color:var(--on-surface);">12</p>
+            <p class="label-md">Heritage Materials</p>
+          </div>
+          <div>
+            <p style="font-family:var(--font-serif);font-size:1.75rem;font-weight:300;color:var(--on-surface);">1</p>
+            <p class="label-md">Atelier Vision</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-image-panel">
+      <img src="images/overcoat.png" alt="Structured Wool Overcoat — THE ARCHIVE Inaugural Collection" style="width:100%;height:100%;object-fit:cover;">
+      <div style="position:absolute;bottom:var(--spacing-lg);right:var(--spacing-lg);background:rgba(252,249,248,0.9);backdrop-filter:blur(12px);padding:var(--spacing-sm) var(--spacing-md);">
+        <p class="label-md" style="margin-bottom:4px;color:var(--primary)">Featured Piece</p>
+        <p style="font-family:var(--font-serif);font-size:1rem;color:var(--on-surface)">Structured Wool Overcoat</p>
+        <p style="font-size:0.75rem;color:var(--on-surface-variant)">Natural Bone — ₹1,04,000</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== TICKER ======================== -->
+<div class="ticker" role="marquee">
+  <div class="ticker-inner">
+    <span>Free shipping on orders over ₹41,500</span>
+    <span class="dot">✦</span>
+    <span>Spring / Summer 2024 Collection — Now Live</span>
+    <span class="dot">✦</span>
+    <span>Handcrafted in Heritage Ateliers</span>
+    <span class="dot">✦</span>
+    <span>Pay via UPI, Net Banking, Cards &amp; Wallets</span>
+    <span class="dot">✦</span>
+    <span>Returns within 30 days, no questions asked</span>
+    <span class="dot">✦</span>
+    <!-- duplicate for infinite scroll -->
+    <span>Free shipping on orders over ₹999</span>
+    <span class="dot">✦</span>
+    <span>Spring / Summer 2024 Collection — Now Live</span>
+    <span class="dot">✦</span>
+    <span>Handcrafted in Heritage Ateliers</span>
+    <span class="dot">✦</span>
+    <span>Pay via UPI, Net Banking, Cards &amp; Wallets</span>
+    <span class="dot">✦</span>
+    <span>Returns within 30 days, no questions asked</span>
+    <span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- ======================== CURATED COLLECTIONS ======================== -->
+<section aria-label="Curated Collections">
+  <div style="max-width:1440px;margin:0 auto;padding:var(--spacing-xxl) var(--spacing-xl) var(--spacing-lg);" class="reveal">
+    <p class="section-label">Curated Collections</p>
+    <div class="section-header">
+      <h2 class="headline-md">The Four Pillars</h2>
+      <a href="collections.html" class="btn btn-text">View All Archives →</a>
+    </div>
+  </div>
+
+  <div class="collections-wrap">
+    <div class="collections-grid">
+      <a href="collections.html" class="collection-tile" style="min-height:520px;">
+        <div class="tile-bg-1" style="width:100%;height:100%;position:absolute;inset:0;"></div>
+        <img src="images/overcoat.png" alt="Outerwear Collection" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.85;">
+        <div class="collection-tile-overlay">
+          <p class="tile-label">Spring / Summer 24</p>
+          <p class="tile-title">Outerwear &<br>Structured Silhouettes</p>
+          <p class="tile-cta">Explore →</p>
+        </div>
+      </a>
+
+      <a href="collections.html" class="collection-tile">
+        <div class="tile-bg-2" style="width:100%;height:100%;position:absolute;inset:0;"></div>
+        <img src="images/mens_sweater.png" alt="Knitwear Essentials" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.8;">
+        <div class="collection-tile-overlay">
+          <p class="tile-label">Signature Series</p>
+          <p class="tile-title">Knitwear<br>Essentials</p>
+          <p class="tile-cta">Explore →</p>
+        </div>
+      </a>
+
+      <a href="collections.html" class="collection-tile">
+        <div class="tile-bg-3" style="width:100%;height:100%;position:absolute;inset:0;"></div>
+        <img src="images/shirt.png" alt="Shirts" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.75;">
+        <div class="collection-tile-overlay">
+          <p class="tile-label">Objects</p>
+          <p class="tile-title">Shirts &<br>Blouses</p>
+          <p class="tile-cta">Explore →</p>
+        </div>
+      </a>
+
+      <a href="collections.html" class="collection-tile">
+        <div class="tile-bg-4" style="width:100%;height:100%;position:absolute;inset:0;"></div>
+        <img src="images/leather_loafers.png" alt="Footwear & Accessories" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.8;">
+        <div class="collection-tile-overlay">
+          <p class="tile-label">Refinements</p>
+          <p class="tile-title">Footwear &<br>Accessories</p>
+          <p class="tile-cta">Explore →</p>
+        </div>
+      </a>
+
+      <a href="collections.html" class="collection-tile">
+        <div class="tile-bg-5" style="width:100%;height:100%;position:absolute;inset:0;"></div>
+        <img src="images/bespoke_bag.png" alt="Bags & Leather Goods" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.8;">
+        <div class="collection-tile-overlay">
+          <p class="tile-label">Heritage</p>
+          <p class="tile-title">Bags &<br>Leather Goods</p>
+          <p class="tile-cta">Explore →</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== ESSENTIAL ARTIFACTS ======================== -->
+<section id="essentials" class="section" aria-label="Essential Artifacts">
+  <div class="reveal">
+    <p class="section-label">Essential Artifacts</p>
+    <div class="section-header">
+      <h2 class="headline-md">Inaugural Pieces</h2>
+      <a href="collections.html" class="btn btn-text">View Full Collection →</a>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="product-card reveal" data-href="product.html?id=1">
+      <div class="product-img">
+        <img src="images/overcoat.png" alt="Structured Wool Overcoat">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="1" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(1); updateCardWishlistUI(this, 1)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(1,'Structured Wool Overcoat',104000,'Natural Bone')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Outerwear</p>
+        <p class="product-name">Structured Wool Overcoat</p>
+        <p class="product-sub">Natural Bone</p>
+        <p class="product-price">₹1,04,000</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=2">
+      <div class="product-img">
+        <img src="images/shirt.png" alt="Linen Popover Shirt">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="2" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(2); updateCardWishlistUI(this, 2)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(2,'Linen Popover Shirt',31500,'Ivory Mist')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Tops</p>
+        <p class="product-name">Linen Popover Shirt</p>
+        <p class="product-sub">Ivory Mist</p>
+        <p class="product-price">₹31,500</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=3">
+      <div class="product-img">
+        <img src="images/bespoke_bag.png" alt="Bespoke Weekender Bag">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="3" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(3); updateCardWishlistUI(this, 3)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(3,'Bespoke Weekender Bag',174500,'Obsidian')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Leather Goods</p>
+        <p class="product-name">Bespoke Weekender Bag</p>
+        <p class="product-sub">Obsidian</p>
+        <p class="product-price">₹1,74,500</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=4">
+      <div class="product-img">
+        <img src="images/womens_trousers.png" alt="Pleated Studio Trousers">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="4" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(4); updateCardWishlistUI(this, 4)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(4,'Pleated Studio Trousers',37500,'Charcoal')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Trousers</p>
+        <p class="product-name">Pleated Studio Trousers</p>
+        <p class="product-sub">Charcoal</p>
+        <p class="product-price">₹37,500</p>
+      </div>
+    </div>
+    
+    <div class="product-card reveal" data-href="product.html?id=5">
+      <div class="product-img">
+        <img src="images/womens_blazer.png" alt="Heritage Tailored Blazer">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="5" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(5); updateCardWishlistUI(this, 5)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(5,'Heritage Tailored Blazer',104000,'Charcoal')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Outerwear</p>
+        <p class="product-name">Heritage Tailored Blazer</p>
+        <p class="product-sub">Charcoal</p>
+        <p class="product-price">₹1,04,000</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=11">
+      <div class="product-img">
+        <img src="images/cashmere_wrap.png" alt="Pure Cashmere Travel Wrap">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="11" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(11); updateCardWishlistUI(this, 11)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(11,'Pure Cashmere Travel Wrap',45500,'Bone')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Accessories</p>
+        <p class="product-name">Pure Cashmere Travel Wrap</p>
+        <p class="product-sub">Bone</p>
+        <p class="product-price">₹45,500</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=7">
+      <div class="product-img">
+        <img src="images/leather_loafers.png" alt="Hand-Burnished Leather Loafers">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="7" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(7); updateCardWishlistUI(this, 7)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(7,'Hand-Burnished Leather Loafers',51500,'Cognac')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Footwear</p>
+        <p class="product-name">Hand-Burnished Leather Loafers</p>
+        <p class="product-sub">Cognac</p>
+        <p class="product-price">₹51,500</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=15">
+      <div class="product-img">
+        <img src="images/womens_dress.png" alt="Silk Champagne Midi Dress">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="15" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(15); updateCardWishlistUI(this, 15)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(15,'Silk Champagne Midi Dress',87500,'Champagne')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Dresses</p>
+        <p class="product-name">Silk Champagne Midi Dress</p>
+        <p class="product-sub">Champagne</p>
+        <p class="product-price">₹87,500</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== CHILDREN'S ARCHIVE ======================== -->
+<section id="children" class="section" aria-label="Children's Artifacts">
+  <div class="reveal" style="margin-bottom:var(--spacing-xl);">
+    <div style="width:100%;height:350px;position:relative;overflow:hidden;border:1px solid rgba(205,198,179,0.3);">
+      <img src="images/children_banner.png" alt="Children's Archive Title Image" style="width:100%;height:100%;object-fit:cover;object-position:center;">
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,0.25);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;">
+        <p class="section-label" style="color:rgba(255,255,255,0.9);border-bottom-color:rgba(255,255,255,0.5);">The Next Generation</p>
+        <h2 class="display-lg">Children's Archive</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="product-card reveal" data-href="product.html?id=13">
+      <div class="product-img">
+        <img src="images/linen_set.png" alt="Organic Linen Two-Piece Set">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="13" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(13); updateCardWishlistUI(this, 13)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(13,'Organic Linen Two-Piece Set',15500,'Oat')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Essentials</p>
+        <p class="product-name">Organic Linen Two-Piece Set</p>
+        <p class="product-sub">Oat</p>
+        <p class="product-price">₹15,500</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=17">
+      <div class="product-img">
+        <img src="images/childrens_pinafore.png" alt="Sage Organic Cotton Pinafore">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="17" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(17); updateCardWishlistUI(this, 17)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(17,'Sage Organic Cotton Pinafore',22500,'Sage')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Dresses</p>
+        <p class="product-name">Sage Organic Cotton Pinafore</p>
+        <p class="product-sub">Sage</p>
+        <p class="product-price">₹22,500</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=18">
+      <div class="product-img">
+        <img src="images/childrens_blazer.png" alt="Heritage Mini Wool Blazer">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="18" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(18); updateCardWishlistUI(this, 18)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(18,'Heritage Mini Wool Blazer',31000,'Charcoal')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Outerwear</p>
+        <p class="product-name">Heritage Mini Wool Blazer</p>
+        <p class="product-sub">Charcoal</p>
+        <p class="product-price">₹31,000</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=19">
+      <div class="product-img">
+        <img src="images/baby_cardigan.png" alt="Baby Cashmere Cardigan">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="19" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(19); updateCardWishlistUI(this, 19)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(19,'Baby Cashmere Cardigan',28000,'Ivory')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Knitwear</p>
+        <p class="product-name">Baby Cashmere Cardigan</p>
+        <p class="product-sub">Ivory</p>
+        <p class="product-price">₹28,000</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=28">
+      <div class="product-img">
+        <img src="images/childrens_sweater.png" alt="Merino Wool Sailor Sweater">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="28" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(28); updateCardWishlistUI(this, 28)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(28,'Merino Wool Sailor Sweater',24500,'Navy')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Knitwear</p>
+        <p class="product-name">Merino Wool Sailor Sweater</p>
+        <p class="product-sub">Navy</p>
+        <p class="product-price">₹24,500</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=29">
+      <div class="product-img">
+        <img src="images/childrens_shorts.png" alt="Linen Drawstring Shorts">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="29" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(29); updateCardWishlistUI(this, 29)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(29,'Linen Drawstring Shorts',12000,'Sand')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Essentials</p>
+        <p class="product-name">Linen Drawstring Shorts</p>
+        <p class="product-sub">Sand</p>
+        <p class="product-price">₹12,000</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=30">
+      <div class="product-img">
+        <img src="images/childrens_overalls.png" alt="Heritage Denim Overalls">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="30" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(30); updateCardWishlistUI(this, 30)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(30,'Heritage Denim Overalls',18500,'Indigo')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Essentials</p>
+        <p class="product-name">Heritage Denim Overalls</p>
+        <p class="product-sub">Indigo</p>
+        <p class="product-price">₹18,500</p>
+      </div>
+    </div>
+
+    <div class="product-card reveal" data-href="product.html?id=31">
+      <div class="product-img">
+        <img src="images/childrens_coat.png" alt="Heritage Wool Peacoat">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="31" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(31); updateCardWishlistUI(this, 31)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+        <div class="product-overlay">
+          <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();addQuick(31,'Heritage Wool Peacoat',42000,'Navy')">Add to Archive</button>
+        </div>
+      </div>
+      <div class="product-info">
+        <p class="product-category">Outerwear</p>
+        <p class="product-name">Heritage Wool Peacoat</p>
+        <p class="product-sub">Navy</p>
+        <p class="product-price">₹42,000</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== ABOUT / PHILOSOPHY ======================== -->
+<section class="about-focus reveal" aria-labelledby="philosophy-title">
+  <div class="abstract-shape"></div>
+  <div class="about-focus-inner">
+    <h2 id="philosophy-title" class="about-focus-title">
+      A Study of<br><em>Permanence.</em>
+    </h2>
+    <div class="about-focus-content">
+      <p>THE ARCHIVE was founded on a singular conviction: that luxury is found in the objects that transcend time. We curate not for the season, but for the lifetime.</p>
+      <p>Every piece is a dialogue between legacy and line—a quiet collection of historical mastery and modern restraint, sourced from heritage ateliers across the globe.</p>
+      
+      <div class="about-focus-stats">
+        <div class="about-stat-item">
+          <span class="about-stat-num">18</span>
+          <span class="about-stat-label">Heritage Ateliers</span>
+        </div>
+        <div class="about-stat-item">
+          <span class="about-stat-num">100%</span>
+          <span class="about-stat-label">Traceable Sourcing</span>
+        </div>
+      </div>
+      
+      <div style="margin-top:var(--spacing-xl);">
+        <a href="about.html" class="btn btn-secondary" style="border-color:rgba(255,255,255,0.2);color:#fff;">Our Full Story →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== FOOTER ======================== -->
+<footer class="site-footer" id="about" role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-brand-name">The Archive</p>
+      <p class="footer-tagline">A curated study of architecture and apparel. Structured essentials for the modern atelier. We value your silence.</p>
+      <div>
+        <p class="footer-col-title" style="margin-bottom:var(--spacing-sm);">The Weekly Dispatch</p>
+        <div class="footer-newsletter">
+          <input type="email" placeholder="Your email address" id="newsletter-email">
+          <button onclick="subscribeNewsletter()">Subscribe</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="footer-col-title">Collections</p>
+      <nav class="footer-links" aria-label="Collection links">
+        <a href="collections.html">All Items</a>
+        <a href="collections.html">Outerwear</a>
+        <a href="collections.html">Knitwear</a>
+        <a href="collections.html">Footwear</a>
+        <a href="collections.html">Accessories</a>
+      </nav>
+    </div>
+    <div>
+      <p class="footer-col-title">The Atelier</p>
+      <nav class="footer-links" aria-label="Atelier links">
+        <a href="#">About Us</a>
+        <a href="#">Sustainability</a>
+        <a href="#">Careers</a>
+      </nav>
+    </div>
+    <div>
+      <p class="footer-col-title">Support</p>
+      <nav class="footer-links" aria-label="Support links">
+        <a href="#">Shipping</a>
+        <a href="#">Returns</a>
+        <a href="#">Contact</a>
+        <a href="#">Bespoke</a>
+        <a href="#">FAQs</a>
+      </nav>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copyright">© 2024 The Editorial Archive. All rights reserved.</p>
+    <div class="footer-legal">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  function addQuick(id, name, price, color) {
+    addToCart({ id, name, price, color, size: 'M', qty: 1 });
+  }
+
+  function subscribeNewsletter() {
+    const email = document.getElementById('newsletter-email').value;
+    if (!email || !email.includes('@')) {
+      showToast('Please enter a valid email address.');
+      return;
+    }
+    showToast('Thank you. You are now part of The Archive dispatch.');
+    document.getElementById('newsletter-email').value = '';
+  }
+
+  // Search functionality
+  document.getElementById('site-search').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    const products = [
+      'Structured Wool Overcoat', 'Linen Popover Shirt', 'Bespoke Weekender Bag',
+      'Pleated Studio Trousers', 'Heritage Tailored Blazer', 'Silk Draped Blouse'
+    ];
+    const suggestions = document.getElementById('search-suggestions');
+    if (q.length > 1) {
+      const matches = products.filter(p => p.toLowerCase().includes(q));
+      if (matches.length) {
+        suggestions.innerHTML = '<p class="label-md" style="margin-bottom:0.75rem">Results</p>' +
+          matches.map(m => `<a href="collections.html" class="badge" style="margin:4px;display:inline-block">${m}</a>`).join('');
+      }
+    }
+  });
+</script>
+</body>
+</html>

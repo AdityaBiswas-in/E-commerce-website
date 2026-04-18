@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — THE ARCHIVE</title>
+  <link rel="icon" type="image/png" href="images/Titel.png">
+  <meta name="description" content="Join THE ARCHIVE. Create your account to access exclusive collections, order tracking, and member benefits.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { overflow-x: hidden; }
+
+    .auth-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* ── Left Visual ── */
+    .auth-visual {
+      position: relative;
+      background: var(--charcoal);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: var(--spacing-xl);
+      overflow: hidden;
+    }
+
+    .auth-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #1c1a14 0%, #2e2a1e 50%, #1c1a14 100%);
+    }
+
+    .auth-visual-orb {
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .auth-visual-orb-1 {
+      width: 500px; height: 500px;
+      top: -100px; left: -150px;
+      background: radial-gradient(circle, rgba(112,92,35,0.2) 0%, transparent 70%);
+    }
+
+    .auth-visual-orb-2 {
+      width: 300px; height: 300px;
+      bottom: 80px; right: -60px;
+      background: radial-gradient(circle, rgba(205,198,179,0.06) 0%, transparent 70%);
+    }
+
+    .auth-visual-logo { position: relative; z-index: 2; }
+
+    .auth-visual-logo a {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--champagne);
+      text-decoration: none;
+    }
+
+    .auth-visual-content { position: relative; z-index: 2; }
+    .auth-visual-content .label-md { color: var(--primary); margin-bottom: var(--spacing-md); }
+
+    .auth-visual-content h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 3vw, 3rem);
+      font-weight: 300;
+      color: var(--champagne);
+      line-height: 1.15;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .auth-visual-content h2 em { font-style: italic; color: var(--primary); }
+
+    .plan-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .plan-card {
+      padding: var(--spacing-md);
+      background: rgba(205,198,179,0.04);
+      border: 1px solid rgba(205,198,179,0.1);
+      border-left: 2px solid var(--primary);
+    }
+
+    .plan-card-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--champagne);
+      margin-bottom: 4px;
+    }
+
+    .plan-card-desc {
+      font-size: 0.73rem;
+      color: rgba(205,198,179,0.55);
+      line-height: 1.5;
+    }
+
+    .auth-visual-footer {
+      position: relative;
+      z-index: 2;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: rgba(205,198,179,0.3);
+    }
+
+    /* ── Right Form Panel ── */
+    .auth-form-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--spacing-xxl) calc(var(--spacing-xxl) * 1.2);
+      background: var(--surface);
+      overflow-y: auto;
+    }
+
+    .auth-form-header { margin-bottom: var(--spacing-xl); }
+    .auth-form-header .label-md { color: var(--primary); margin-bottom: var(--spacing-sm); }
+
+    .auth-form-header h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 300;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .auth-form-header p {
+      font-size: 0.85rem;
+      color: var(--on-surface-variant);
+    }
+
+    /* ── Account Type ── */
+    .account-type-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      margin-bottom: 10px;
+    }
+
+    .account-type-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .account-type-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 8px;
+      background: var(--surface-container-low);
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: var(--transition-fast);
+      text-align: center;
+    }
+
+    .account-type-btn:hover {
+      border-color: rgba(112,92,35,0.3);
+      background: var(--surface-container);
+    }
+
+    .account-type-btn.active {
+      border-color: var(--primary);
+      background: rgba(112,92,35,0.05);
+    }
+
+    .account-type-icon {
+      width: 36px; height: 36px;
+      background: var(--surface-container-high);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--on-surface-variant);
+      transition: var(--transition-fast);
+    }
+
+    .account-type-btn.active .account-type-icon {
+      background: rgba(112,92,35,0.1);
+      color: var(--primary);
+    }
+
+    .account-type-name {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      transition: var(--transition-fast);
+    }
+
+    .account-type-btn.active .account-type-name { color: var(--primary); }
+    .account-type-desc { font-size: 0.62rem; color: var(--on-surface-variant); opacity: 0.7; line-height: 1.4; }
+
+    /* ── Social ── */
+    .social-signin { display: flex; flex-direction: column; gap: 10px; margin-bottom: var(--spacing-lg); }
+
+    .social-btn {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 12px;
+      background: var(--surface-container-low);
+      border: 1px solid rgba(205,198,179,0.2);
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      color: var(--on-surface);
+      transition: var(--transition-fast);
+    }
+
+    .social-btn:hover { background: var(--surface-container); border-color: rgba(112,92,35,0.3); }
+
+    .divider-text {
+      display: flex; align-items: center; gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-lg);
+      color: var(--on-surface-variant);
+      font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    .divider-text::before, .divider-text::after {
+      content: ''; flex: 1; height: 1px; background: rgba(205,198,179,0.15);
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); }
+
+    .auth-form { display: flex; flex-direction: column; gap: var(--spacing-md); }
+
+    /* Business-only fields */
+    .business-fields { display: none; }
+    .business-fields.show { display: contents; }
+
+    .trade-fields { display: none; }
+    .trade-fields.show { display: contents; }
+
+    .password-strength {
+      height: 3px;
+      background: rgba(205,198,179,0.15);
+      margin-top: -8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    .strength-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      color: var(--on-surface-variant);
+      margin-top: 4px;
+    }
+
+    .terms-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.75rem;
+      color: var(--on-surface-variant);
+      line-height: 1.5;
+    }
+
+    .terms-check input[type="checkbox"] { accent-color: var(--primary); margin-top: 3px; flex-shrink: 0; }
+    .terms-check a { color: var(--primary); text-decoration: none; }
+    .terms-check a:hover { text-decoration: underline; }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: var(--spacing-md);
+      font-size: 0.8rem;
+      color: var(--on-surface-variant);
+    }
+
+    .auth-switch a { color: var(--primary); text-decoration: none; font-weight: 500; }
+    .auth-switch a:hover { text-decoration: underline; }
+
+    @media (max-width: 860px) {
+      .auth-layout { grid-template-columns: 1fr; }
+      .auth-visual { display: none; }
+      .auth-form-panel {
+        min-height: 100vh;
+        padding: 100px var(--spacing-lg) var(--spacing-xl);
+      }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 400px) {
+      .account-type-tabs { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Minimal top bar -->
+<div style="position:fixed;top:0;left:0;right:0;z-index:200;padding:20px var(--spacing-xl);display:flex;align-items:center;justify-content:space-between;background:rgba(252,249,248,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(205,198,179,0.12);">
+  <a href="index.html" style="font-family:var(--font-serif);font-size:1.1rem;font-weight:300;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;color:var(--on-surface);">The Archive</a>
+  <div style="display:flex;gap:var(--spacing-sm);align-items:center;">
+    <a href="about.html" style="font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-surface-variant);text-decoration:none;">About</a>
+    <span style="color:rgba(205,198,179,0.4);">·</span>
+    <a href="collections.html" style="font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-surface-variant);text-decoration:none;">Collections</a>
+    <span style="color:rgba(205,198,179,0.4);">·</span>
+    <a href="signin.html" style="font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--primary);text-decoration:none;">Sign In</a>
+  </div>
+</div>
+
+<div class="auth-layout" style="padding-top:61px;">
+
+  <!-- Left Visual -->
+  <div class="auth-visual">
+    <div class="auth-visual-orb auth-visual-orb-1"></div>
+    <div class="auth-visual-orb auth-visual-orb-2"></div>
+    <div class="auth-visual-logo"><a href="index.html">The Archive</a></div>
+    <div class="auth-visual-content">
+      <p class="label-md">Membership</p>
+      <h2>Join the <em>Archive.</em><br>Three ways in.</h2>
+      <div class="plan-cards">
+        <div class="plan-card">
+          <p class="plan-card-title">✦ Personal Account</p>
+          <p class="plan-card-desc">For individual patrons. Access wishlist, order history, and early collection previews.</p>
+        </div>
+        <div class="plan-card">
+          <p class="plan-card-title">✦ Business Account</p>
+          <p class="plan-card-desc">For companies and gifting purposes. Bulk pricing and invoice management.</p>
+        </div>
+        <div class="plan-card">
+          <p class="plan-card-title">✦ Trade Account</p>
+          <p class="plan-card-desc">For designers, stylists, and interior professionals. Trade prices and atelier access.</p>
+        </div>
+      </div>
+    </div>
+    <div class="auth-visual-footer">© 2024 The Archive · All Rights Reserved</div>
+  </div>
+
+  <!-- Right Form -->
+  <div class="auth-form-panel">
+    <div class="auth-form-header">
+      <p class="label-md">New Member</p>
+      <h1>Create Your<br>Account</h1>
+      <p>Already a member? <a href="signin.html" style="color:var(--primary);text-decoration:none;font-weight:500;">Sign in →</a></p>
+    </div>
+
+    <!-- Account Type -->
+    <p class="account-type-label">I am signing up as a</p>
+    <div class="account-type-tabs" role="group" aria-label="Select account type">
+      <button class="account-type-btn active" id="type-personal" onclick="setAccountType('personal', this)" aria-pressed="true">
+        <div class="account-type-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <span class="account-type-name">Personal</span>
+        <span class="account-type-desc">Individual patron</span>
+      </button>
+      <button class="account-type-btn" id="type-business" onclick="setAccountType('business', this)" aria-pressed="false">
+        <div class="account-type-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <span class="account-type-name">Business</span>
+        <span class="account-type-desc">Corporate account</span>
+      </button>
+      <button class="account-type-btn" id="type-trade" onclick="setAccountType('trade', this)" aria-pressed="false">
+        <div class="account-type-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <span class="account-type-name">Trade</span>
+        <span class="account-type-desc">Designer / Stylist</span>
+      </button>
+    </div>
+
+    <!-- Social Sign-Up -->
+    <div class="social-signin">
+      <button class="social-btn" onclick="socialAuth('Google')">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Sign up with Google
+      </button>
+      <button class="social-btn" onclick="socialAuth('Apple')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--on-surface)"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Sign up with Apple
+      </button>
+    </div>
+
+    <div class="divider-text">or create with email</div>
+
+    <!-- Registration Form -->
+    <form class="auth-form" id="signup-form" onsubmit="handleSignUp(event)" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <input type="text" id="first-name" placeholder=" " autocomplete="given-name" required>
+          <label for="first-name">First Name</label>
+        </div>
+        <div class="form-group">
+          <input type="text" id="last-name" placeholder=" " autocomplete="family-name" required>
+          <label for="last-name">Last Name</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input type="email" id="email" placeholder=" " autocomplete="email" required>
+        <label for="email">Email Address</label>
+      </div>
+
+      <!-- Business-only fields -->
+      <div class="business-fields" id="business-fields">
+        <div class="form-group">
+          <input type="text" id="company-name" placeholder=" ">
+          <label for="company-name">Company / Organisation Name</label>
+        </div>
+        <div class="form-group">
+          <input type="text" id="gst-number" placeholder=" ">
+          <label for="gst-number">GST Number (for invoice)</label>
+        </div>
+      </div>
+
+      <!-- Trade-only fields -->
+      <div class="trade-fields" id="trade-fields">
+        <div class="form-group">
+          <input type="text" id="studio-name" placeholder=" ">
+          <label for="studio-name">Studio / Agency Name</label>
+        </div>
+        <div class="form-group">
+          <select id="trade-profession" style="padding:14px;border:none;background:var(--surface-container-low);font-family:var(--font-sans);font-size:0.8rem;color:var(--on-surface);width:100%;outline:none;appearance:none;cursor:pointer;">
+            <option value="" disabled selected>Profession</option>
+            <option>Interior Designer</option>
+            <option>Fashion Stylist</option>
+            <option>Personal Shopper</option>
+            <option>Fashion Editor</option>
+            <option>Art Director</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="position:relative;">
+        <input type="password" id="password" placeholder=" " autocomplete="new-password" required oninput="checkStrength(this.value)">
+        <label for="password">Create Password</label>
+        <button type="button" onclick="togglePwd('password', this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--on-surface-variant);padding:4px;" aria-label="Show password">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="password-strength">
+        <div class="password-strength-bar" id="strength-bar"></div>
+      </div>
+      <p class="strength-label" id="strength-label"></p>
+
+      <div class="form-group" style="position:relative;">
+        <input type="password" id="confirm-password" placeholder=" " autocomplete="new-password" required>
+        <label for="confirm-password">Confirm Password</label>
+        <button type="button" onclick="togglePwd('confirm-password', this)" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--on-surface-variant);padding:4px;" aria-label="Show password">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+
+      <label class="terms-check">
+        <input type="checkbox" id="terms-agree" required>
+        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> of THE ARCHIVE.
+      </label>
+
+      <label class="terms-check">
+        <input type="checkbox" id="newsletter">
+        Send me early access previews and curated dispatches from THE ARCHIVE.
+      </label>
+
+      <button type="submit" class="btn btn-primary btn-full" id="signup-btn" style="margin-top:var(--spacing-sm);">
+        Create My Account
+      </button>
+    </form>
+
+    <div class="auth-switch">
+      Already have an account? <a href="signin.html">Sign in →</a>
+    </div>
+  </div>
+</div>
+
+<script src="main.js"></script>
+<script>
+  let accountType = 'personal';
+
+  function setAccountType(type, btn) {
+    accountType = type;
+    document.querySelectorAll('.account-type-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
+
+    // Show/hide conditional fields
+    const businessFields = document.getElementById('business-fields');
+    const tradeFields = document.getElementById('trade-fields');
+    businessFields.classList.toggle('show', type === 'business');
+    tradeFields.classList.toggle('show', type === 'trade');
+  }
+
+  function socialAuth(provider) {
+    showToast(`${provider} sign-up is coming soon. Please use email for now.`);
+  }
+
+  function togglePwd(id, btn) {
+    const input = document.getElementById(id);
+    const isText = input.type === 'text';
+    input.type = isText ? 'password' : 'text';
+    btn.setAttribute('aria-label', isText ? 'Show password' : 'Hide password');
+  }
+
+  function checkStrength(val) {
+    const bar = document.getElementById('strength-bar');
+    const label = document.getElementById('strength-label');
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+      { pct: '0%', color: 'transparent', text: '' },
+      { pct: '25%', color: '#c0392b', text: 'Weak' },
+      { pct: '55%', color: '#e67e22', text: 'Fair' },
+      { pct: '80%', color: '#27ae60', text: 'Strong' },
+      { pct: '100%', color: '#1a8a50', text: 'Very Strong' },
+    ];
+
+    bar.style.width = levels[score].pct;
+    bar.style.background = levels[score].color;
+    label.textContent = levels[score].text;
+    label.style.color = levels[score].color;
+  }
+
+  function handleSignUp(e) {
+    e.preventDefault();
+    const firstName = document.getElementById('first-name').value.trim();
+    const lastName = document.getElementById('last-name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirm-password').value;
+    const terms = document.getElementById('terms-agree').checked;
+    const btn = document.getElementById('signup-btn');
+
+    if (!firstName || !lastName) { showToast('Please enter your full name.'); return; }
+    if (!email || !email.includes('@')) { showToast('Please enter a valid email address.'); return; }
+    if (password.length < 8) { showToast('Password must be at least 8 characters.'); return; }
+    if (password !== confirm) { showToast('Passwords do not match. Please try again.'); return; }
+    if (!terms) { showToast('Please agree to our Terms of Service to continue.'); return; }
+
+    btn.textContent = 'Creating your account…';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      let usersDB = {};
+      try { usersDB = JSON.parse(localStorage.getItem('archive_users')) || {}; } catch(e) {}
+      
+      if (usersDB[email]) {
+        btn.textContent = 'Create My Account';
+        btn.disabled = false;
+        showToast('Account with this email already exists.');
+        return;
+      }
+
+      usersDB[email] = {
+        name: `${firstName} ${lastName}`,
+        email: email,
+        password: password,
+        type: accountType
+      };
+      localStorage.setItem('archive_users', JSON.stringify(usersDB));
+      localStorage.setItem('archive_active_session', email);
+
+      showToast(`Welcome to THE ARCHIVE, ${firstName}. Your account is ready.`);
+      
+      const params = new URLSearchParams(window.location.search);
+      const redirect = params.get('redirect') || 'account.html';
+      
+      setTimeout(() => { window.location.href = redirect; }, 1400);
+    }, 1600);
+  }
+</script>
+</body>
+</html>

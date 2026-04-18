@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order History — THE ARCHIVE</title>
+  <link rel="icon" type="image/png" href="images/Titel.png">
+  <meta name="description" content="View your order history and manage your purchases at THE ARCHIVE.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-header {
+      padding: calc(var(--header-height) + var(--spacing-xxl)) var(--spacing-md) var(--spacing-xl);
+      text-align: center;
+      background: var(--surface-container-low);
+      border-bottom: 1px solid rgba(205,198,179,0.2);
+    }
+    
+    .account-layout {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: var(--spacing-xxl) var(--spacing-md);
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: var(--spacing-xl);
+    }
+
+
+    .order-card {
+      background: var(--surface-container-low);
+      border: 1px solid rgba(205,198,179,0.15);
+      margin-bottom: var(--spacing-lg);
+      padding: var(--spacing-lg);
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid rgba(205,198,179,0.1);
+      padding-bottom: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .order-meta p { margin-bottom: 4px; }
+
+    .order-status {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .order-status.cancelled {
+      border-color: #c0392b;
+      color: #c0392b;
+    }
+
+    .order-item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cancel-btn {
+      background: transparent;
+      border: 1px solid #c0392b;
+      color: #c0392b;
+      padding: 6px 12px;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+    }
+    .cancel-btn:hover {
+      background: rgba(192, 57, 43, 0.1);
+    }
+    
+    .order-status.delivered {
+      border-color: #27ae60;
+      color: #27ae60;
+    }
+
+    .return-btn {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 6px 12px;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+    }
+    .return-btn:hover {
+      background: rgba(112, 92, 35, 0.05);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: var(--spacing-xxl) 0;
+    }
+
+    @media (max-width: 768px) {
+      .account-layout { grid-template-columns: 1fr; }
+      .account-sidebar { border-right: none; border-bottom: 1px solid rgba(205,198,179,0.2); padding-bottom: var(--spacing-xl); padding-right: 0;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Site Navigation -->
+<header class="site-nav" role="banner">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Archive</a>
+
+    <nav class="nav-links" aria-label="Primary Navigation">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="nav-icon-btn" href="account.html" aria-label="Account" title="My Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="cart.html" aria-label="Shopping cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <header class="page-header reveal">
+    <p class="label-md" style="color:var(--primary);margin-bottom:var(--spacing-sm);">Member Portal</p>
+    <h1 class="headline-md">Order History</h1>
+  </header>
+
+  <div class="account-layout">
+    <aside class="account-sidebar reveal">
+      <nav class="sidebar-nav">
+        <a href="account.html" class="sidebar-nav-item">Dashboard</a>
+        <a href="orders.html" class="sidebar-nav-item">Order History</a>
+        <a href="wishlist.html" class="sidebar-nav-item">Archive / Wishlist</a>
+        <button onclick="handleSignOut()" class="sidebar-nav-item sign-out">Sign Out</button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <section class="reveal" id="orders-container">
+      <!-- Injected via JS -->
+    </section>
+  </div>
+</main>
+
+<script src="main.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    updateOrderStatuses(); // Update statuses based on time
+    
+    const sessionEmail = localStorage.getItem('archive_active_session');
+    
+    let usersDB = {};
+    try { usersDB = JSON.parse(localStorage.getItem('archive_users')) || {}; } catch(e) {}
+
+    const currentUser = usersDB[sessionEmail];
+    const container = document.getElementById('orders-container');
+
+    if (!currentUser || !currentUser.orders || currentUser.orders.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <p style="font-family:var(--font-serif);font-size:1.5rem;color:var(--on-surface);margin-bottom:var(--spacing-md)">Your order history is empty.</p>
+          <a href="collections.html" class="btn btn-primary">Explore Collections</a>
+        </div>
+      `;
+      return;
+    }
+
+    renderOrders(currentUser.orders, sessionEmail);
+  });
+
+  function renderOrders(orders, email) {
+    const container = document.getElementById('orders-container');
+    container.innerHTML = '';
+
+    orders.forEach((order, index) => {
+      const orderDate = new Date(order.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      const deliveryDate = new Date(order.deliveryDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      
+      const isCancelled = order.status === 'Cancelled';
+      const isReturned = order.status === 'Returned';
+      const isDelivered = order.status === 'Delivered';
+      
+      let statusClass = 'order-status';
+      if (isCancelled || isReturned) statusClass += ' cancelled';
+      if (isDelivered) statusClass += ' delivered';
+
+      let actionButton = '';
+      if (!isCancelled && !isReturned) {
+        if (order.status === 'Processing' || order.status === 'Confirmed') {
+          actionButton = `<div style="margin-top:8px;"><button class="cancel-btn" onclick="cancelOrder('${order.id}', '${email}')">Cancel Order</button></div>`;
+        } else if (order.canReturn) {
+          actionButton = `<div style="margin-top:8px;"><button class="return-btn" onclick="returnOrder('${order.id}')">Request Return</button></div>`;
+        }
+      }
+
+      let itemsHtml = order.items.map(i => `
+        <div class="order-item">
+          <div>
+            <p style="font-family:var(--font-serif);font-size:1rem;color:var(--on-surface);">${i.name}</p>
+            <p style="font-size:0.7rem;color:var(--on-surface-variant);text-transform:uppercase;letter-spacing:0.05em">${i.color} / ${i.size} × ${i.qty}</p>
+          </div>
+          <p style="font-family:var(--font-serif);font-size:0.9rem;">₹${(i.price * i.qty).toLocaleString('en-IN')}</p>
+        </div>
+      `).join('');
+
+      container.innerHTML += `
+        <div class="order-card">
+          <div class="order-header">
+            <div class="order-meta">
+              <p style="font-family:var(--font-serif);font-size:1.2rem;">Order #${order.id}</p>
+              <p style="font-size:0.75rem;color:var(--on-surface-variant);letter-spacing:0.05em;">Placed on ${orderDate}</p>
+            </div>
+            <div style="text-align:right">
+              <span class="${statusClass}">${order.status}</span>
+              ${actionButton}
+            </div>
+          </div>
+          <div class="order-item-list">
+            ${itemsHtml}
+          </div>
+          <div style="margin-top:var(--spacing-md);padding-top:var(--spacing-md);border-top:1px solid rgba(205,198,179,0.1);display:flex;justify-content:space-between;align-items:center;">
+             <p style="font-size:0.8rem;color:var(--on-surface-variant); ${isCancelled || isReturned ? 'text-decoration:line-through;opacity:0.5;' : ''}">
+               ${isCancelled ? 'Order Cancelled' : (isReturned ? 'Item Returned' : (isDelivered ? 'Curated & Delivered' : `Scheduled Arriving: ${deliveryDate}`))}
+             </p>
+            <p style="font-family:var(--font-serif);font-size:1.1rem;">Total: ₹${order.total.toLocaleString('en-IN')}</p>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  function cancelOrder(orderId, email) {
+    if(!confirm('Are you sure you want to cancel this order?')) return;
+
+    let usersDB = JSON.parse(localStorage.getItem('archive_users'));
+    let orders = usersDB[email].orders;
+    
+    let orderIndex = orders.findIndex(o => o.id === orderId);
+    if(orderIndex > -1) {
+      orders[orderIndex].status = 'Cancelled';
+      localStorage.setItem('archive_users', JSON.stringify(usersDB));
+      renderOrders(orders, email);
+      showToast('Order successfully cancelled.');
+    }
+  }
+
+</script>
+</body>
+</html>

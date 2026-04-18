@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collections — THE ARCHIVE</title>
+  <link rel="icon" type="image/png" href="images/Titel.png">
+  <meta name="description" content="A permanent collection of silhouettes that define the modern wardrobe. Shop Men, Women and Children sections crafted from heritage materials.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Gender Section Header ── */
+    .gender-section {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: var(--spacing-xxl) var(--spacing-xl) var(--spacing-xl);
+    }
+
+    .gender-section + .gender-section {
+      border-top: 1px solid rgba(205,198,179,0.15);
+    }
+
+    .gender-section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xl);
+      gap: var(--spacing-md);
+    }
+
+    .gender-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .gender-heading {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--on-surface);
+    }
+
+    .gender-desc {
+      font-size: 0.82rem;
+      color: var(--on-surface-variant);
+      line-height: 1.7;
+      max-width: 380px;
+      margin-top: 12px;
+    }
+
+    /* ── Product Grid ── */
+    .product-grid-listing {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--spacing-lg);
+    }
+
+    /* ── Top Nav / Jump Bar ── */
+    .gender-jumpbar {
+      position: sticky;
+      top: 64px;
+      z-index: 100;
+      background: rgba(252,249,248,0.96);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(205,198,179,0.2);
+      padding: 12px var(--spacing-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+    }
+
+    .gender-jumpbar-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      flex-shrink: 0;
+    }
+
+    .jump-btn {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      padding: 6px 16px;
+      border-radius: 2px;
+      transition: var(--transition-fast);
+    }
+
+    .jump-btn:hover, .jump-btn.active {
+      background: var(--charcoal);
+      color: #fff;
+    }
+
+    /* ── Gender Hero Band ── */
+    .gender-hero-band {
+      width: 100%;
+      height: 4px;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .band-men { background: linear-gradient(to right, #2c3e50, #4a5568); }
+    .band-women { background: linear-gradient(to right, #705c23, #cab06e); }
+    .band-children { background: linear-gradient(to right, #4a7c59, #82b492); }
+
+    /* ── Sort bar ── */
+    .sort-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid rgba(205,198,179,0.15);
+      margin-bottom: var(--spacing-lg);
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
+
+    .sort-bar select {
+      padding: 8px 14px;
+      border: 1px solid rgba(205,198,179,0.3);
+      background: transparent;
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--on-surface-variant);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .results-count {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--on-surface-variant);
+    }
+
+    @media (max-width: 1100px) {
+      .product-grid-listing { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .product-grid-listing { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-sm); }
+      .gender-section { padding: var(--spacing-xl) var(--spacing-md); }
+      .gender-jumpbar { padding: 10px var(--spacing-md); gap: var(--spacing-sm); }
+      .gender-section-header { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      .product-grid-listing { grid-template-columns: 1fr 1fr; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile Navigation">
+  <a href="index.html">Home</a>
+  <a href="collections.html">Collections</a>
+  <a href="about.html">About</a>
+  <a href="signin.html">My Account</a>
+</nav>
+
+<!-- Site Navigation -->
+<header class="site-nav" role="banner">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Archive</a>
+    <nav class="nav-links" aria-label="Primary Navigation">
+      <a href="index.html">Home</a>
+      <a href="collections.html" class="active">Collections</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="nav-icon-btn" href="signin.html" aria-label="Account" title="Sign In">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="cart.html" aria-label="Shopping Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count">0</span>
+      </a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>/</span>
+    <span>Collections</span>
+  </div>
+  <h1 class="display-lg" style="max-width:700px;">The Expanded<br><em style="font-style:italic;color:var(--primary)">Collection.</em></h1>
+  <p class="body-md" style="margin-top:1rem;max-width:500px;">A permanent collection of silhouettes that define the modern wardrobe — curated across Men, Women, and Children. Crafted from heritage materials and refined through generations of artisanal mastery.</p>
+</div>
+
+<!-- Gender Jump Bar -->
+<div class="gender-jumpbar" role="navigation" aria-label="Jump to section">
+  <span class="gender-jumpbar-label">Jump to —</span>
+  <button class="jump-btn active" onclick="jumpTo('sec-men', this)">Men</button>
+  <button class="jump-btn" onclick="jumpTo('sec-women', this)">Women</button>
+  <button class="jump-btn" onclick="jumpTo('sec-children', this)">Children</button>
+</div>
+
+<!-- ════════════════════ MEN ════════════════════ -->
+<section id="sec-men" aria-label="Men's Collection">
+  <div class="gender-section">
+    <div class="gender-hero-band band-men"></div>
+    <div class="gender-section-header">
+      <div class="gender-title-block">
+        <span class="gender-label">The Archive — Men</span>
+        <h2 class="gender-heading">Men's<br>Collection</h2>
+        <p class="gender-desc">Structured silhouettes and heritage fabrics crafted for the modern man. From the outerwear to everyday essentials — built to last a lifetime.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:var(--spacing-sm);">
+        <span class="results-count" id="men-count">8 pieces</span>
+      </div>
+    </div>
+
+    <div class="product-grid-listing" id="grid-men">
+
+      <!-- Product M1 — NEW LUXURY Formalwear -->
+      <div class="product-card reveal" data-href="product.html?id=22" data-gender="men" data-category="formalwear" data-price="185000">
+        <div class="product-img">
+          <img src="images/mens_tuxedo.png" alt="Midnight Wool Tuxedo">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="22" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(22); updateCardWishlistUI(this, 22)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(22,'Midnight Wool Tuxedo',185000,'Midnight Blue')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Formalwear</p>
+          <p class="product-name">Midnight Wool Tuxedo</p>
+          <p class="product-sub">Midnight Blue</p>
+          <p class="product-price">₹1,85,000</p>
+          <span class="badge badge-gold" style="margin-top:6px">Signature</span>
+        </div>
+      </div>
+
+      <!-- Product M2 — NEW Knitwear -->
+      <div class="product-card reveal" data-href="product.html?id=23" data-gender="men" data-category="knitwear" data-price="42500">
+        <div class="product-img">
+          <img src="images/mens_polo.png" alt="Heritage Knit Polo">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="23" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(23); updateCardWishlistUI(this, 23)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(23,'Heritage Knit Polo',42500,'Charcoal')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Knitwear</p>
+          <p class="product-name">Heritage Knit Polo</p>
+          <p class="product-sub">Midnight Charcoal Blend</p>
+          <p class="product-price">₹42,500</p>
+        </div>
+      </div>
+
+      <!-- Product M3 — NEW Leather Goods -->
+      <div class="product-card reveal" data-href="product.html?id=24" data-gender="men" data-category="bags" data-price="28500">
+        <div class="product-img">
+          <img src="images/mens_wallet.png" alt="Slim Leather Wallet">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="24" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(24); updateCardWishlistUI(this, 24)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(24,'Slim Leather Wallet',28500,'Obsidian')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Leather Goods</p>
+          <p class="product-name">Slim Leather Wallet</p>
+          <p class="product-sub">Obsidian Full-Grain</p>
+          <p class="product-price">₹28,500</p>
+        </div>
+      </div>
+
+      <!-- Product M4 — Placeholder Luxury -->
+      <div class="product-card reveal" data-href="product.html?id=25" data-gender="men" data-category="knitwear" data-price="58500">
+        <div class="product-img">
+          <img src="images/mens_vneck.png" alt="Cashmere V-Neck Sweater">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="25" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(25); updateCardWishlistUI(this, 25)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(25,'Cashmere V-Neck Sweater',58500,'Charcoal')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Knitwear</p>
+          <p class="product-name">Cashmere V-Neck Sweater</p>
+          <p class="product-sub">Grade-A Mongolian Cashmere</p>
+          <p class="product-price">₹58,500</p>
+          <span class="badge badge-gold" style="margin-top:6px">New Arrival</span>
+        </div>
+      </div>
+
+      <!-- Product M5 — Placeholder Shirt -->
+      <div class="product-card reveal" data-href="product.html?id=26" data-gender="men" data-category="tops" data-price="24500">
+        <div class="product-img">
+          <img src="images/white_shirt.png" alt="Studio White Dress Shirt">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="26" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(26); updateCardWishlistUI(this, 26)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(26,'Studio White Dress Shirt',24500,'Pure White')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Tops &amp; Shirts</p>
+          <p class="product-name">Studio White Dress Shirt</p>
+          <p class="product-sub">Egyptian Cotton Poplin</p>
+          <p class="product-price">₹24,500</p>
+        </div>
+      </div>
+
+      <!-- Product M6 — Placeholder Denim -->
+      <div class="product-card reveal" data-href="product.html?id=27" data-gender="men" data-category="trousers" data-price="32000">
+        <div class="product-img">
+          <img src="images/raw_denim.png" alt="Raw Selvedge Denim">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="27" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(27); updateCardWishlistUI(this, 27)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(27,'Raw Selvedge Denim',32000,'Indigo')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Trousers</p>
+          <p class="product-name">Raw Selvedge Denim</p>
+          <p class="product-sub">Okayama Selvedge</p>
+          <p class="product-price">₹32,000</p>
+          <span class="badge badge-gold" style="margin-top:6px">New Arrival</span>
+        </div>
+      </div>
+
+      <!-- Product M7 — NEW Monk-Strap Shoes -->
+      <div class="product-card reveal" data-href="product.html?id=20" data-gender="men" data-category="footwear" data-price="75500">
+        <div class="product-img">
+          <img src="images/mens_loafers.png" alt="Cognac Monk-Strap Dress Shoes">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="20" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(20); updateCardWishlistUI(this, 20)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(20,'Cognac Monk-Strap Dress Shoes',75500,'Aged Cognac')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Footwear</p>
+          <p class="product-name">Cognac Monk-Strap Dress Shoes</p>
+          <p class="product-sub">Aged Cognac Calfskin</p>
+          <p class="product-price">₹75,500</p>
+          <span class="badge badge-gold" style="margin-top:6px">New Arrival</span>
+        </div>
+      </div>
+
+      <!-- Product M8 — NEW Slim Chinos -->
+      <div class="product-card reveal" data-href="product.html?id=21" data-gender="men" data-category="trousers" data-price="29500">
+        <div class="product-img">
+          <img src="images/mens_chinos.png" alt="Stone Slim-Fit Chinos">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="21" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(21); updateCardWishlistUI(this, 21)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(21,'Stone Slim-Fit Chinos',29500,'Stone')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Trousers</p>
+          <p class="product-name">Stone Slim-Fit Chinos</p>
+          <p class="product-sub">Italian Cotton Twill</p>
+          <p class="product-price">₹29,500</p>
+        </div>
+      </div>
+
+    </div><!-- /grid-men -->
+  </div>
+</section>
+
+<!-- ════════════════════ WOMEN ════════════════════ -->
+<section id="sec-women" aria-label="Women's Collection">
+  <div class="gender-section">
+    <div class="gender-hero-band band-women"></div>
+    <div class="gender-section-header">
+      <div class="gender-title-block">
+        <span class="gender-label">The Archive — Women</span>
+        <h2 class="gender-heading">Women's<br>Collection</h2>
+        <p class="gender-desc">An intimate study of femininity and form. Pure silks, Italian leathers, and heritage cashmere — each piece a quiet declaration.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:var(--spacing-sm);">
+        <span class="results-count" id="women-count">12 pieces</span>
+      </div>
+    </div>
+
+    <div class="product-grid-listing" id="grid-women">
+
+      <!-- Product W0.2 — MOVED FROM MEN -->
+      <div class="product-card reveal" data-href="product.html?id=10" data-gender="women" data-category="knitwear" data-price="68500">
+        <div class="product-img">
+          <img src="images/mens_sweater.png" alt="Heritage Cashmere Turtleneck">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="10" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(10); updateCardWishlistUI(this, 10)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(10,'Heritage Cashmere Turtleneck',68500,'Midnight Navy')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Knitwear</p>
+          <p class="product-name">Heritage Cashmere Turtleneck</p>
+          <p class="product-sub">Midnight Navy</p>
+          <p class="product-price">₹68,500</p>
+          <span class="badge badge-gold" style="margin-top:6px">New Arrival</span>
+        </div>
+      </div>
+
+      <!-- Product W0.3 — MOVED FROM MEN -->
+      <div class="product-card reveal" data-href="product.html?id=14" data-gender="women" data-category="outerwear" data-price="142000">
+        <div class="product-img">
+          <img src="images/mens_trench.png" alt="Heritage Wool Trench Coat">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="14" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(14); updateCardWishlistUI(this, 14)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(14,'Heritage Wool Trench Coat',142000,'Camel Tobacco')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Outerwear</p>
+          <p class="product-name">Heritage Wool Trench Coat</p>
+          <p class="product-sub">Camel Tobacco</p>
+          <p class="product-price">₹1,42,000</p>
+          <span class="badge badge-gold" style="margin-top:6px">New Arrival</span>
+        </div>
+      </div>
+
+      <!-- Product W0.4 — MOVED FROM MEN -->
+      <div class="product-card reveal" data-href="product.html?id=5" data-gender="women" data-category="outerwear" data-price="104000">
+        <div class="product-img">
+          <img src="images/womens_blazer.png" alt="Heritage Tailored Blazer">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="5" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(5); updateCardWishlistUI(this, 5)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(5,'Heritage Tailored Blazer',104000,'Charcoal')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Outerwear</p>
+          <p class="product-name">Heritage Tailored Blazer</p>
+          <p class="product-sub">Charcoal</p>
+          <p class="product-price">₹1,04,000</p>
+        </div>
+      </div>
+
+      <!-- Product W0.5 — MOVED FROM MEN -->
+      <div class="product-card reveal" data-href="product.html?id=4" data-gender="women" data-category="trousers" data-price="37500">
+        <div class="product-img">
+          <img src="images/womens_trousers.png" alt="Pleated Studio Trousers">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="4" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(4); updateCardWishlistUI(this, 4)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(4,'Pleated Studio Trousers',37500,'Charcoal')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Trousers</p>
+          <p class="product-name">Pleated Studio Trousers</p>
+          <p class="product-sub">Premium Charcoal Wool</p>
+          <p class="product-price">₹37,500</p>
+        </div>
+      </div>
+
+      <!-- Product W0 — MOVED FROM MEN -->
+      <div class="product-card reveal" data-href="product.html?id=1" data-gender="women" data-category="outerwear" data-price="104000">
+        <div class="product-img">
+          <img src="images/overcoat.png" alt="Structured Wool Overcoat">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="1" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(1); updateCardWishlistUI(this, 1)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(1,'Structured Wool Overcoat',104000,'Natural Bone')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info" style="border-top: 1px solid rgba(205,198,179,0.1); padding-top:12px">
+          <p class="product-category">Outerwear</p>
+          <p class="product-name">Structured Wool Overcoat</p>
+          <p class="product-sub">Natural Bone</p>
+          <p class="product-price">₹1,04,000</p>
+          <span class="badge badge-gold" style="margin-top:6px">Inaugural</span>
+        </div>
+      </div>
+
+      <!-- Product W0.1 — MOVED FROM MEN -->
+      <div class="product-card reveal" data-href="product.html?id=2" data-gender="women" data-category="tops" data-price="31500">
+        <div class="product-img">
+          <img src="images/shirt.png" alt="Linen Popover Shirt">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="2" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(2); updateCardWishlistUI(this, 2)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(2,'Linen Popover Shirt',31500,'Ivory Mist')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Tops &amp; Shirts</p>
+          <p class="product-name">Linen Popover Shirt</p>
+          <p class="product-sub">Ivory Mist</p>
+          <p class="product-price">₹31,500</p>
+        </div>
+      </div>
+
+      <!-- Product W1 — NEW IMAGE Silk Dress -->
+      <div class="product-card reveal" data-href="product.html?id=15" data-gender="women" data-category="dresses" data-price="87500">
+        <div class="product-img">
+          <img src="images/womens_dress.png" alt="Silk Champagne Midi Dress">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="15" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(15); updateCardWishlistUI(this, 15)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(15,'Silk Champagne Midi Dress',87500,'Champagne')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Dresses</p>
+          <p class="product-name">Silk Champagne Midi Dress</p>
+          <p class="product-sub">Pure Mulberry Silk</p>
+          <p class="product-price">₹87,500</p>
+          <span class="badge badge-gold" style="margin-top:6px">New Arrival</span>
+        </div>
+      </div>
+
+      <!-- Product W2 — NEW IMAGE Leather Bag -->
+      <div class="product-card reveal" data-href="product.html?id=16" data-gender="women" data-category="bags" data-price="138000">
+        <div class="product-img">
+          <img src="images/womens_bag.png" alt="Cognac Structured Top-Handle Bag">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="16" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(16); updateCardWishlistUI(this, 16)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(16,'Cognac Top-Handle Bag',138000,'Cognac')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Leather Goods</p>
+          <p class="product-name">Cognac Structured Top-Handle Bag</p>
+          <p class="product-sub">Vegetable-Tanned Italian Leather</p>
+          <p class="product-price">₹1,38,000</p>
+          <span class="badge badge-gold" style="margin-top:6px">Signature</span>
+        </div>
+      </div>
+
+      <!-- Product W3 -->
+      <div class="product-card reveal" data-href="product.html?id=6" data-gender="women" data-category="tops" data-price="40000">
+        <div class="product-img">
+          <img src="images/silk_blouse.png" alt="Essential Silk Draped Blouse">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="6" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(6); updateCardWishlistUI(this, 6)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(6,'Essential Silk Draped Blouse',40000,'Champagne Ivory')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Tops &amp; Blouses</p>
+          <p class="product-name">Essential Silk Draped Blouse</p>
+          <p class="product-sub">Champagne Ivory</p>
+          <p class="product-price">₹40,000</p>
+        </div>
+      </div>
+
+      <!-- Product W4 Bespoke Bag -->
+      <div class="product-card reveal" data-href="product.html?id=3" data-gender="women" data-category="bags" data-price="174500">
+        <div class="product-img">
+          <img src="images/bespoke_bag.png" alt="Bespoke Weekender Bag">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="3" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(3); updateCardWishlistUI(this, 3)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(3,'Bespoke Weekender Bag',174500,'Obsidian')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Leather Goods</p>
+          <p class="product-name">Bespoke Weekender Bag</p>
+          <p class="product-sub">Obsidian</p>
+          <p class="product-price">₹1,74,500</p>
+          <span class="badge badge-gold" style="margin-top:6px">Signature</span>
+        </div>
+      </div>
+
+      <!-- Product W5 Gold Links -->
+      <div class="product-card reveal" data-href="product.html?id=9" data-gender="women" data-category="accessories" data-price="153500">
+        <div class="product-img">
+          <img src="images/gold_links.png" alt="Heritage 18k Gold Links">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="9" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(9); updateCardWishlistUI(this, 9)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(9,'Heritage 18k Gold Links',153500,'Gold')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Jewelry</p>
+          <p class="product-name">Heritage 18k Gold Links</p>
+          <p class="product-sub">18k Hammered Gold</p>
+          <p class="product-price">₹1,53,500</p>
+          <span class="badge badge-gold" style="margin-top:6px">Limited Edition</span>
+        </div>
+      </div>
+
+      <!-- Product W6 Cashmere Wrap -->
+      <div class="product-card reveal" data-href="product.html?id=11" data-gender="women" data-category="accessories" data-price="45500">
+        <div class="product-img">
+          <img src="images/cashmere_wrap.png" alt="Pure Cashmere Travel Wrap">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="11" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(11); updateCardWishlistUI(this, 11)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(11,'Pure Cashmere Travel Wrap',45500,'Bone')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Accessories</p>
+          <p class="product-name">Pure Cashmere Travel Wrap</p>
+          <p class="product-sub">Bone</p>
+          <p class="product-price">₹45,500</p>
+        </div>
+      </div>
+
+    </div><!-- /grid-women -->
+  </div>
+</section>
+
+<!-- ════════════════════ CHILDREN ════════════════════ -->
+<section id="sec-children" aria-label="Children's Collection">
+  <div class="gender-section">
+    <div class="gender-hero-band band-children"></div>
+    <div class="gender-section-header">
+      <div class="gender-title-block">
+        <span class="gender-label">The Archive — Children</span>
+        <h2 class="gender-heading">Children's<br>Collection</h2>
+        <p class="gender-desc">Heritage craft for the next generation. Organic fibres, gentle dyes, and heirloom-quality construction — pieces built to be passed on.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:var(--spacing-sm);">
+        <span class="results-count" id="children-count">4 pieces</span>
+      </div>
+    </div>
+
+    <div class="product-grid-listing" id="grid-children">
+
+      <!-- Product C1 — NEW IMAGE Pinafore -->
+      <div class="product-card reveal" data-href="product.html?id=17" data-gender="children" data-category="dresses" data-price="22500">
+        <div class="product-img">
+          <img src="images/childrens_pinafore.png" alt="Sage Organic Cotton Pinafore">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="17" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(17); updateCardWishlistUI(this, 17)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(17,'Sage Organic Cotton Pinafore',22500,'Sage Green')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Dresses</p>
+          <p class="product-name">Sage Organic Cotton Pinafore</p>
+          <p class="product-sub">Organic Cotton · Ages 3–10</p>
+          <p class="product-price">₹22,500</p>
+          <span class="badge badge-gold" style="margin-top:6px">New Arrival</span>
+        </div>
+      </div>
+
+      <!-- Product C2 — NEW IMAGE Blazer -->
+      <div class="product-card reveal" data-href="product.html?id=18" data-gender="children" data-category="outerwear" data-price="31000">
+        <div class="product-img">
+          <img src="images/childrens_blazer.png" alt="Heritage Mini Wool Blazer">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="18" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(18); updateCardWishlistUI(this, 18)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(18,'Heritage Mini Wool Blazer',31000,'Charcoal Grey')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Outerwear</p>
+          <p class="product-name">Heritage Mini Wool Blazer</p>
+          <p class="product-sub">Premium Wool · Ages 5–12</p>
+          <p class="product-price">₹31,000</p>
+          <span class="badge badge-gold" style="margin-top:6px">New Arrival</span>
+        </div>
+      </div>
+
+      <!-- Product C3 Linen Set -->
+      <div class="product-card reveal" data-href="product.html?id=13" data-gender="children" data-category="essentials" data-price="15500">
+        <div class="product-img">
+          <img src="images/linen_set.png" alt="Organic Linen Two-Piece Set">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="13" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(13); updateCardWishlistUI(this, 13)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(13,'Organic Linen Two-Piece Set',15500,'Sage')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Essentials</p>
+          <p class="product-name">Organic Linen Two-Piece Set</p>
+          <p class="product-sub">Pure Linen · Ages 2–8</p>
+          <p class="product-price">₹15,500</p>
+        </div>
+      </div>
+
+      <!-- Product C4 Cashmere Cardigan -->
+      <div class="product-card reveal" data-href="product.html?id=19" data-gender="children" data-category="knitwear" data-price="28000">
+        <div class="product-img">
+          <img src="images/baby_cardigan.png" alt="Baby Cashmere Cardigan">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="19" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(19); updateCardWishlistUI(this, 19)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(19,'Baby Cashmere Cardigan',28000,'Oat')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Knitwear</p>
+          <p class="product-name">Baby Cashmere Cardigan</p>
+          <p class="product-sub">Mongolian Cashmere · Ages 1–6</p>
+          <p class="product-price">₹28,000</p>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-href="product.html?id=28" data-gender="children" data-category="knitwear" data-price="24500">
+        <div class="product-img">
+          <img src="images/childrens_sweater.png" alt="Merino Wool Sailor Sweater">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="28" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(28); updateCardWishlistUI(this, 28)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(28,'Merino Wool Sailor Sweater',24500,'Navy')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Knitwear</p>
+          <p class="product-name">Merino Wool Sailor Sweater</p>
+          <p class="product-sub">Merino Wool · Ages 2–8</p>
+          <p class="product-price">₹24,500</p>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-href="product.html?id=29" data-gender="children" data-category="essentials" data-price="12000">
+        <div class="product-img">
+          <img src="images/childrens_shorts.png" alt="Linen Drawstring Shorts">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="29" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(29); updateCardWishlistUI(this, 29)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(29,'Linen Drawstring Shorts',12000,'Sand')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Essentials</p>
+          <p class="product-name">Linen Drawstring Shorts</p>
+          <p class="product-sub">Pure Linen · Ages 3–10</p>
+          <p class="product-price">₹12,000</p>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-href="product.html?id=30" data-gender="children" data-category="essentials" data-price="18500">
+        <div class="product-img">
+          <img src="images/childrens_overalls.png" alt="Heritage Denim Overalls">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="30" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(30); updateCardWishlistUI(this, 30)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(30,'Heritage Denim Overalls',18500,'Indigo')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Essentials</p>
+          <p class="product-name">Heritage Denim Overalls</p>
+          <p class="product-sub">Japanese Raw Denim</p>
+          <p class="product-price">₹18,500</p>
+        </div>
+      </div>
+
+      <div class="product-card reveal" data-href="product.html?id=31" data-gender="children" data-category="outerwear" data-price="42000">
+        <div class="product-img">
+          <img src="images/childrens_coat.png" alt="Heritage Wool Peacoat">
+          <button class="card-wishlist-btn" aria-label="Toggle Wishlist" data-product-id="31" onclick="event.stopPropagation(); event.preventDefault(); toggleWishlist(31); updateCardWishlistUI(this, 31)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <div class="product-overlay">
+            <button class="btn btn-primary" style="flex:1;padding:10px;" onclick="event.stopPropagation();quickAdd(31,'Heritage Wool Peacoat',42000,'Navy')">Add to Archive</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-category">Outerwear</p>
+          <p class="product-name">Heritage Wool Peacoat</p>
+          <p class="product-sub">Virgin Wool · Navy</p>
+          <p class="product-price">₹42,000</p>
+        </div>
+      </div>
+
+    </div><!-- /grid-children -->
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <p class="footer-brand-name">The Archive</p>
+      <p class="footer-tagline">A curated study of architecture and apparel. Structured essentials for the modern atelier.</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Collections</p>
+      <nav class="footer-links">
+        <a href="collections.html#sec-men">Men</a>
+        <a href="collections.html#sec-women">Women</a>
+        <a href="collections.html#sec-children">Children</a>
+      </nav>
+    </div>
+    <div>
+      <p class="footer-col-title">The Atelier</p>
+      <nav class="footer-links"><a href="about.html">About</a><a href="account.html">My Account</a></nav>
+    </div>
+    <div>
+      <p class="footer-col-title">Support</p>
+      <nav class="footer-links"><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Contact</a></nav>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copyright">© 2024 The Archive. All rights reserved.</p>
+    <div class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a></div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  function quickAdd(id, name, price, color) {
+    addToCart({ id, name, price, color, size: 'M', qty: 1 });
+  }
+
+  function jumpTo(sectionId, btn) {
+    document.querySelectorAll('.jump-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const el = document.getElementById(sectionId);
+    if (el) {
+      const offset = el.getBoundingClientRect().top + window.scrollY - 110;
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+    }
+  }
+
+  // Highlight jump bar on scroll
+  (function() {
+    const sections = [
+      { id: 'sec-men', btn: 0 },
+      { id: 'sec-women', btn: 1 },
+      { id: 'sec-children', btn: 2 },
+    ];
+
+    window.addEventListener('scroll', () => {
+      const btns = document.querySelectorAll('.jump-btn');
+      let active = 0;
+      sections.forEach((s, i) => {
+        const el = document.getElementById(s.id);
+        if (el && el.getBoundingClientRect().top < 200) active = i;
+      });
+      btns.forEach((b, i) => b.classList.toggle('active', i === active));
+    });
+  })();
+</script>
+</body>
+</html>

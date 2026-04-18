@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account — THE ARCHIVE</title>
+  <link rel="icon" type="image/png" href="images/Titel.png">
+  <meta name="description" content="View your order history and account details at THE ARCHIVE.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Premium Header Padding */
+    .page-header {
+      padding: calc(var(--header-height) + var(--spacing-xxl)) var(--spacing-md) var(--spacing-xl);
+      text-align: center;
+      background: var(--surface-container-low);
+      border-bottom: 1px solid rgba(205,198,179,0.2);
+    }
+    
+    .account-layout {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: var(--spacing-xxl) var(--spacing-md);
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: var(--spacing-xl);
+    }
+
+
+    .account-details-box {
+      background: var(--surface-container-low);
+      padding: var(--spacing-xl);
+      border: 1px solid rgba(205,198,179,0.15);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(205,198,179,0.1);
+      padding: 12px 0;
+      font-size: 0.85rem;
+    }
+
+    .details-row:last-child {
+      border-bottom: none;
+    }
+
+    .order-history-item {
+      padding: var(--spacing-md);
+      border: 1px solid rgba(205,198,179,0.15);
+      margin-bottom: var(--spacing-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Edit Mode Styles */
+    .edit-input-group {
+      margin-bottom: 12px;
+    }
+
+    .edit-input-group label {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      margin-bottom: 4px;
+    }
+
+    .edit-input-group input, .edit-input-group select {
+      width: 100%;
+      padding: 10px 0;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(205,198,179,0.3);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--on-surface);
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .edit-input-group input:focus, .edit-input-group select:focus {
+      border-color: var(--primary);
+    }
+
+    .edit-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .account-layout {
+        grid-template-columns: 1fr;
+      }
+      .account-sidebar {
+        border-right: none;
+        border-bottom: 1px solid rgba(205,198,179,0.2);
+        padding-right: 0;
+        padding-bottom: var(--spacing-xl);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile Navigation">
+  <a href="index.html">Home</a>
+  <a href="collections.html">Collections</a>
+  <a href="about.html">About</a>
+  <a href="account.html">My Account</a>
+</nav>
+
+<!-- Site Navigation -->
+<header class="site-nav" role="banner">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">The Archive</a>
+
+    <nav class="nav-links" aria-label="Primary Navigation">
+      <a href="index.html">Home</a>
+      <a href="collections.html">Collections</a>
+      <a href="about.html">About</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="nav-icon-btn" href="account.html" aria-label="Account" title="My Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="wishlist.html" aria-label="Wishlist" title="Wishlist">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </a>
+      <a class="nav-icon-btn" href="cart.html" aria-label="Shopping cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-count" aria-live="polite">0</span>
+      </a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Page Header -->
+  <header class="page-header reveal">
+    <p class="label-md" style="color:var(--primary);margin-bottom:var(--spacing-sm);">Member Portal</p>
+    <h1 class="headline-md" id="welcome-title">Welcome</h1>
+  </header>
+
+  <div class="account-layout">
+    <aside class="account-sidebar reveal">
+      <nav class="sidebar-nav">
+        <a href="account.html" class="sidebar-nav-item">Dashboard</a>
+        <a href="orders.html" class="sidebar-nav-item">Order History</a>
+        <a href="wishlist.html" class="sidebar-nav-item">Archive / Wishlist</a>
+        <button onclick="handleSignOut()" class="sidebar-nav-item sign-out">Sign Out</button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <section class="reveal">
+      <h2 style="font-family:var(--font-serif);font-size:1.5rem;font-weight:300;margin-bottom:1rem;">Account Details</h2>
+      <div class="account-details-box">
+        <!-- View Mode -->
+        <div id="view-details-mode">
+          <div class="details-row">
+            <span style="color:var(--on-surface-variant)">Name</span>
+            <span id="account-name">Loading...</span>
+          </div>
+          <div class="details-row">
+            <span style="color:var(--on-surface-variant)">Email Address</span>
+            <span id="account-email">Loading...</span>
+          </div>
+          <div class="details-row">
+            <span style="color:var(--on-surface-variant)">Membership Type</span>
+            <span id="account-type" style="text-transform:capitalize;">Loading...</span>
+          </div>
+          <div class="details-row" style="margin-top:1rem; border:none; padding-bottom:0;">
+            <button class="btn btn-secondary" id="edit-details-btn" onclick="toggleEditMode(true)" style="font-size:0.7rem; padding:8px 16px;">Edit Details</button>
+          </div>
+        </div>
+
+        <!-- Edit Mode -->
+        <div id="edit-details-mode" style="display: none;">
+          <div class="edit-input-group">
+            <label for="input-name">Full Name</label>
+            <input type="text" id="input-name" placeholder="Your Name">
+          </div>
+          <div class="edit-input-group" style="opacity: 0.7;">
+            <label>Email Address (Primary Identifier)</label>
+            <input type="text" id="display-email" readonly style="cursor: not-allowed;">
+          </div>
+          <div class="edit-input-group">
+            <label for="input-type">Membership Type</label>
+            <select id="input-type">
+              <option value="Personal">Personal</option>
+              <option value="Business">Business</option>
+              <option value="Elite">Elite</option>
+            </select>
+          </div>
+          <div class="edit-actions">
+            <button class="btn btn-primary" onclick="saveAccountDetails()" style="font-size:0.7rem; padding:8px 16px;">Save Changes</button>
+            <button class="btn btn-secondary" onclick="toggleEditMode(false)" style="font-size:0.7rem; padding:8px 16px;">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <h2 style="font-family:var(--font-serif);font-size:1.5rem;font-weight:300;margin-bottom:1rem;margin-top:var(--spacing-xxl);">Address Archive</h2>
+      <div id="address-list-container">
+        <!-- Addresses will be rendered here -->
+      </div>
+      
+      <button class="btn btn-secondary" onclick="showAddAddressForm()" id="add-address-btn" style="font-size:0.7rem; padding:8px 16px; margin-top:1rem;">+ Add New Address</button>
+
+      <div id="address-form-modal" style="display:none; margin-top:var(--spacing-lg); border-top:1px solid var(--outline-variant); padding-top:var(--spacing-lg);">
+        <h3 id="addr-form-title" style="font-family:var(--font-serif);font-size:1.1rem;font-weight:300;margin-bottom:1rem;">New Address Coordinates</h3>
+        <input type="hidden" id="editing-addr-id" value="">
+        <div class="edit-input-group">
+          <label>Address Label (e.g., Home, Office)</label>
+          <input type="text" id="addr-label" placeholder="Home">
+        </div>
+        <div class="form-row" style="margin-bottom:12px;">
+          <div class="edit-input-group">
+            <label>First Name</label>
+            <input type="text" id="addr-first-name">
+          </div>
+          <div class="edit-input-group">
+            <label>Last Name</label>
+            <input type="text" id="addr-last-name">
+          </div>
+        </div>
+        <div class="edit-input-group">
+          <label>Address Line 1</label>
+          <input type="text" id="addr-1">
+        </div>
+        <div class="edit-input-group">
+          <label>Address Line 2 (Optional)</label>
+          <input type="text" id="addr-2">
+        </div>
+        <div class="form-row" style="margin-bottom:12px;">
+          <div class="edit-input-group">
+            <label>City</label>
+            <input type="text" id="addr-city">
+          </div>
+          <div class="edit-input-group">
+            <label>ZIP / Postal Code</label>
+            <input type="text" id="addr-zip">
+          </div>
+        </div>
+        <div class="edit-actions" style="margin-top:1.5rem;">
+          <button class="btn btn-primary" onclick="handleAddressSubmit()" id="addr-save-btn" style="font-size:0.7rem; padding:8px 16px;">Save Address</button>
+          <button class="btn btn-secondary" onclick="hideAddAddressForm()" style="font-size:0.7rem; padding:8px 16px;">Cancel</button>
+        </div>
+      </div>
+
+      <h2 style="font-family:var(--font-serif);font-size:1.5rem;font-weight:300;margin-bottom:1rem;margin-top:var(--spacing-xxl);">Recent Orders</h2>
+      <div id="order-history">
+        <!-- Injected via JS -->
+      </div>
+      
+    </section>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-bottom">
+    <p class="footer-copyright">© 2024 The Archive. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sessionEmail = localStorage.getItem('archive_active_session');
+    
+    // Safely redirect if not logged in
+    if (!sessionEmail) {
+      window.location.href = 'signin.html';
+      return;
+    }
+
+    // Retrieve user data from localStorage pseudo-DB
+    let usersDB = {};
+    try {
+      usersDB = JSON.parse(localStorage.getItem('archive_users')) || {};
+    } catch(e) {}
+
+    const currentUser = usersDB[sessionEmail] || { name: 'Member', email: sessionEmail, type: 'Personal' };
+
+    // Update DOM
+    document.getElementById('welcome-title').textContent = `Welcome, ${currentUser.name}`;
+    document.getElementById('account-name').textContent = currentUser.name;
+    document.getElementById('account-email').textContent = sessionEmail;
+    document.getElementById('account-type').textContent = currentUser.type;
+
+    // Render Addresses
+    renderAddresses();
+
+    // Render Recent Order
+    const historyContainer = document.getElementById('order-history');
+    if (!currentUser.orders || currentUser.orders.length === 0) {
+      historyContainer.innerHTML = '<p style="font-size:0.85rem;color:var(--on-surface-variant)">You have no recent orders. <a href="collections.html" style="color:var(--primary);text-decoration:none;">Start exploring</a>.</p>';
+    } else {
+      const recent = currentUser.orders[0];
+      const isCancelled = recent.status === 'Cancelled';
+      const itemsString = recent.items.map(i => `${i.qty} × ${i.name}`).join('<br>');
+      historyContainer.innerHTML = `
+        <div class="order-history-item" style="opacity: ${isCancelled ? '0.6' : '1'}">
+          <div>
+            <p style="font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-surface-variant)">Order #${recent.id}</p>
+            <div style="font-family:var(--font-serif);margin-top:8px;font-size:0.9rem;line-height:1.4">${itemsString}</div>
+            <a href="orders.html" style="font-size:0.65rem;text-transform:uppercase;color:var(--primary);text-decoration:none;display:inline-block;margin-top:10px;">View All Orders →</a>
+          </div>
+          <div style="text-align:right;">
+            <p style="font-size:1rem;font-family:var(--font-serif)">₹${recent.total.toLocaleString('en-IN')}</p>
+            <p style="font-size:0.75rem;color:${isCancelled ? '#c0392b' : 'var(--primary)'};margin-top:4px;">${recent.status}</p>
+          </div>
+        </div>
+      `;
+    }
+  });
+
+
+  function toggleEditMode(isEdit) {
+    const viewDiv = document.getElementById('view-details-mode');
+    const editDiv = document.getElementById('edit-details-mode');
+    
+    if (isEdit) {
+      viewDiv.style.display = 'none';
+      editDiv.style.display = 'block';
+      // Sync inputs with current values
+      document.getElementById('input-name').value = document.getElementById('account-name').textContent;
+      document.getElementById('display-email').value = document.getElementById('account-email').textContent;
+      document.getElementById('input-type').value = document.getElementById('account-type').textContent;
+    } else {
+      viewDiv.style.display = 'block';
+      editDiv.style.display = 'none';
+    }
+  }
+
+  function saveAccountDetails() {
+    const sessionEmail = localStorage.getItem('archive_active_session');
+    const newName = document.getElementById('input-name').value.trim();
+    const newType = document.getElementById('input-type').value;
+
+    if (!newName) {
+      showToast('Name cannot be empty.');
+      return;
+    }
+
+    try {
+      const usersDB = JSON.parse(localStorage.getItem('archive_users')) || {};
+      if (usersDB[sessionEmail]) {
+        usersDB[sessionEmail].name = newName;
+        usersDB[sessionEmail].type = newType;
+        localStorage.setItem('archive_users', JSON.stringify(usersDB));
+        
+        // Update UI
+        document.getElementById('account-name').textContent = newName;
+        document.getElementById('account-type').textContent = newType;
+        document.getElementById('welcome-title').textContent = `Welcome, ${newName}`;
+        
+        toggleEditMode(false);
+        showToast('Account details updated.');
+      }
+    } catch(e) {
+      showToast('Error saving changes.');
+    }
+  }
+
+  function renderAddresses() {
+    const addresses = getAddresses();
+    const container = document.getElementById('address-list-container');
+    container.innerHTML = '';
+
+    if (addresses.length === 0) {
+      container.innerHTML = '<p style="font-size:0.85rem;color:var(--on-surface-variant)">No archived addresses found. <br>Your coordinates will appear here after your first curation.</p>';
+      return;
+    }
+
+    addresses.forEach(addr => {
+      const box = document.createElement('div');
+      box.className = 'account-details-box';
+      box.style.marginBottom = '1.5rem';
+      box.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <p style="font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--primary);margin-bottom:8px;">${addr.label || 'Saved Address'}</p>
+            <p style="font-family:var(--font-serif);font-size:1.1rem;margin-bottom:2px;">${addr.firstName} ${addr.lastName}</p>
+            <p style="font-size:0.85rem;line-height:1.6;color:var(--on-surface-variant)">
+              ${addr.address1}${addr.address2 ? ', ' + addr.address2 : ''}<br>
+              ${addr.city}, ${addr.zip}<br>
+              ${addr.country || 'India'}
+            </p>
+          </div>
+          <div style="display:flex; gap:12px;">
+            <button onclick="editAddressArchived(${addr.id})" style="background:transparent;border:none;color:var(--primary);font-size:0.65rem;text-transform:uppercase;cursor:pointer;letter-spacing:0.05em;">Edit</button>
+            <button onclick="removeAddress(${addr.id})" style="background:transparent;border:none;color:#c0392b;font-size:0.65rem;text-transform:uppercase;cursor:pointer;letter-spacing:0.05em;">Remove</button>
+          </div>
+        </div>
+      `;
+      container.appendChild(box);
+    });
+  }
+
+  function showAddAddressForm() {
+    document.getElementById('address-form-modal').style.display = 'block';
+    document.getElementById('add-address-btn').style.display = 'none';
+    document.getElementById('addr-form-title').textContent = 'New Address Coordinates';
+    document.getElementById('editing-addr-id').value = '';
+    document.getElementById('addr-save-btn').textContent = 'Save Address';
+    
+    // Clear inputs
+    ['addr-label','addr-first-name','addr-last-name','addr-1','addr-2','addr-city','addr-zip'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+  }
+
+  function hideAddAddressForm() {
+    document.getElementById('address-form-modal').style.display = 'none';
+    document.getElementById('add-address-btn').style.display = 'inline-block';
+  }
+
+  function editAddressArchived(id) {
+    const list = getAddresses();
+    const addr = list.find(a => a.id == id);
+    if (!addr) return;
+
+    showAddAddressForm();
+    document.getElementById('addr-form-title').textContent = 'Update Address Coordinates';
+    document.getElementById('editing-addr-id').value = id;
+    document.getElementById('addr-save-btn').textContent = 'Update Address';
+
+    document.getElementById('addr-label').value = addr.label || '';
+    document.getElementById('addr-first-name').value = addr.firstName || '';
+    document.getElementById('addr-last-name').value = addr.lastName || '';
+    document.getElementById('addr-1').value = addr.address1 || '';
+    document.getElementById('addr-2').value = addr.address2 || '';
+    document.getElementById('addr-city').value = addr.city || '';
+    document.getElementById('addr-zip').value = addr.zip || '';
+  }
+
+  function removeAddress(id) {
+    if (confirm('Are you sure you want to remove this address?')) {
+      deleteAddress(id);
+      renderAddresses();
+      showToast('Address removed.');
+    }
+  }
+
+  function handleAddressSubmit() {
+    const id = document.getElementById('editing-addr-id').value;
+    const label = document.getElementById('addr-label').value.trim() || 'Home';
+    const newAddr = {
+      label: label,
+      firstName: document.getElementById('addr-first-name').value.trim(),
+      lastName: document.getElementById('addr-last-name').value.trim(),
+      address1: document.getElementById('addr-1').value.trim(),
+      address2: document.getElementById('addr-2').value.trim(),
+      city: document.getElementById('addr-city').value.trim(),
+      zip: document.getElementById('addr-zip').value.trim(),
+      country: 'India' 
+    };
+
+    if (!newAddr.firstName || !newAddr.address1 || !newAddr.city) {
+      showToast('Please fill in required address fields.');
+      return;
+    }
+
+
+    if (id) {
+      updateAddress(id, newAddr);
+      showToast('Address coordinates updated.');
+    } else {
+      addAddress(newAddr);
+      showToast('New address archived.');
+    }
+    
+    renderAddresses();
+    hideAddAddressForm();
+  }
+</script>
+</body>
+</html>
