@@ -6,7 +6,7 @@ A fully responsive and modern **E-Commerce Website** built using **HTML5**, **CS
 
 ## 🌐 Live Demo
 
-🔗 [Click Here to View Live Demo](https://the-archive-luxury.netlify.app/) <!-- Replace with your Netlify link -->
+🔗 [Click Here to View Live Demo](https://the-archive-luxury.netlify.app/) 
 
 ---
 
